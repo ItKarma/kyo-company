@@ -1,4 +1,5 @@
 import userModel from "../models/User.js";
+import GiftModel from "../models/GiftModel.js";
 
 class UserRepository {
   /**
@@ -8,23 +9,31 @@ class UserRepository {
    * @param {String} userName
    */
 
-  async saveUser(first_name, id, username,balance) {
+  async saveUser(first_name, id, username, balance) {
 
-    return await userModel.create({ first_name, idUser: id, username, balance });
+    try {
+      return await userModel.create({ first_name, idUser: id, username, balance });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   /**
    * params for find user  in db
-   * @param {Number} idUser
+   * @param {Number} id
    * @return { Promise<String>}
    */
 
   async findUser(id) {
-    const user =  await userModel.findOne({ idUser: id });
-    if(null){
-      return false
+    try {
+      const user = await userModel.findOne({ idUser: id });
+      if (null) {
+        return false
+      }
+      return user
+    } catch (error) {
+      console.log(error)
     }
-    return user
   }
 
   /**
@@ -36,34 +45,89 @@ class UserRepository {
   async changebalance(idUser, balance) {
     const value = await userModel.findOneAndUpdate(
       { idUser },
-      { $set: { balance : balance } },
+      { $set: { balance: balance } },
       { upsert: true }
     );
     return value;
   }
 
-  async changeVip(idUser) {
-    const value = await userModel.findOneAndUpdate(
-      { idUser },
-      { $set: { isVip : true } },
-      { upsert: true }
-    );
-    return value;
-  }
-
-    /**
-   * function for change users adm
-   * @param {Number} idUser
+  /**
+   * 
+   * @param {Number} userId 
+   * @param {String} newPlan 
+   * @returns 
    */
 
-    async promoAdm(idUser) {
-      const value = await userModel.findOneAndUpdate(
-        { idUser },
-        { $set: { isAdmin : true } },
-        { upsert: true }
-      );
-      return value;
+  
+  async upgradeUserSubscription (userId, newPlan) {
+
+    const user = await userModel.findOne({ idUser: userId });
+
+    if (!user) {
+        console.log('Usuário não encontrado');
+        return;
     }
+
+    // Atualizar o plano de assinatura
+    user.subscription.plan = newPlan;
+    user.subscription.startDate = new Date();
+    user.subscription.status = 'active';
+
+    // Recalcular a data de término com base no novo plano
+    user.calculateEndDate(newPlan);
+
+    // Salvar as alterações no banco de dados
+    await user.save();
+
+    console.log('Assinatura do usuário atualizada:', user);
+
+    return user;
+};
+
+
+  /**
+ * function for change users adm
+ * @param {Number} idUser
+ */
+
+  async promoAdm(idUser) {
+    const value = await userModel.findOneAndUpdate(
+      { idUser },
+      { $set: { isAdmin: true } },
+      { upsert: true }
+    );
+    return value;
+  }
+
+  async GiftValid(codegift) {
+    try {
+      const code = await GiftModel.findOne({ code: codegift });
+      return code;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  async UpdateGift(userId, codeGift) {
+    try {
+      const updatedGift = await GiftModel.findOneAndUpdate(
+        { code: codeGift }, // Encontra o gift pelo código fornecido
+        {
+          $set: {
+            used: true,
+            redeemedBy: userId
+          }
+        }, // Atualiza os campos `used` e `redeemedBy`
+        { new: true } // Retorna o documento atualizado
+      );
+
+      return updatedGift;
+    } catch (error) {
+      console.error('Erro ao atualizar o gift:', error);
+      throw error; // Lança o erro para ser tratado por quem chamou
+    }
+  }
 }
 
 export default new UserRepository();

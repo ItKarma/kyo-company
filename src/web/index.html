@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Bot</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+        .start-button {
+            padding: 20px 40px;
+            font-size: 24px;
+            color: #fff;
+            background-color: red;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="start-button" onclick="startBot()">Start Bot</button>
+
+    <script>
+        function startBot() {
+            // Send a message to the bot
+            Telegram.WebApp.sendData("start");
+        }
+    </script>
+</body>
+</html>

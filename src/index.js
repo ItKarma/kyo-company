@@ -14,9 +14,10 @@ import { fileURLToPath } from 'url';
 import { getFolderSize } from './utils/read_path.js';
 import axios from 'axios';
 import fetchDownloadLink from './utils/fetchDownloadLink.js'
-import { searchUrlInFiles } from './utils/fileSearch.js';
+import  {searchUrlInFiles}  from './utils/fileSearch.js';
 import fss from 'fs/promises';
 import { InputFile } from "grammy";
+import chalk from "chalk";
 bot.use(hydrateReply);
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,6 +28,7 @@ let coisasUrl = ''
 bot.command("start", async (ctx) => {
   try {
     const user = ctx.update.message.from;
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
     let caption = await responseMessages.noRegistry(user);
 
     await ctx.reply(caption, {
@@ -41,9 +43,10 @@ bot.command("start", async (ctx) => {
       },
       parse_mode: 'HTML'
     });
+
+    console.log(chalk.greenBright(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
-    console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -415,8 +418,6 @@ bot.command("verificar", async (ctx) => {
       await ctx.reply("Você não  tem registro em meu sistema , envie /start");
       return
     }
-
-    await ctx.api.sendChatAction(ctx.update.message.chat.id, "typing");
 
 
     let loadingMessage = await ctx.reply('Consultando... ⌛');

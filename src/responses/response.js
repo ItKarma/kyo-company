@@ -62,7 +62,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
+`;
         return caption;
     }
 
@@ -83,7 +83,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
+`;
         return caption;
     }
 
@@ -107,7 +107,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
+`;
             return caption;
         }
 
@@ -122,7 +122,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
+`;
         return caption;
     }
 
@@ -144,7 +144,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
+`;
         return caption;
     }
 

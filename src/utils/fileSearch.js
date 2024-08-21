@@ -3,9 +3,8 @@ import path, { dirname } from 'path';
 import { createReadStream } from 'fs';
 import { fileURLToPath } from 'url';
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const pastaDados = path.join(__dirname, '.././db_urls');
+const pastaDados = path.join(__dirname, '../db_urls');
 
 export async function searchUrlInFiles(url) {
     const arquivos = fs.readdirSync(pastaDados);
@@ -43,3 +42,4 @@ export async function searchUrlInFiles(url) {
     await Promise.all(promises);
     return resultados;
 }
+

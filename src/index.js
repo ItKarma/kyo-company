@@ -14,7 +14,7 @@ import { fileURLToPath } from 'url';
 import { getFolderSize } from './utils/read_path.js';
 import axios from 'axios';
 import fetchDownloadLink from './utils/fetchDownloadLink.js'
-import  {searchUrlInFiles}  from './utils/fileSearch.js';
+import {searchUrlInFiles}  from './utils/fileSearch.js';
 import fss from 'fs/promises';
 import { InputFile } from "grammy";
 import chalk from "chalk";
@@ -434,6 +434,7 @@ bot.command("verificar", async (ctx) => {
     }, 100);
 
     let result = await searchUrlInFiles(urlSearch);
+
     clearInterval(interval);
 
     if (result.length === 0) {

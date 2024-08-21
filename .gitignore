@@ -1,5 +1,4 @@
 node_modules
 .env
 package-lock.json
-db_urls/*
-!db_urls/.keep
+db_urls

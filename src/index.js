@@ -22,6 +22,8 @@ bot.use(hydrateReply);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+let coisasUrl = ''
+
 bot.command("start", async (ctx) => {
   try {
     const user = ctx.update.message.from;
@@ -51,15 +53,13 @@ bot.command("plan", async (ctx) => {
   const user = ctx.update.message.from;
   let textId = ctx.match;
   let planAndIdUser = textId.split("|");
-  console.log(planAndIdUser)
 
   try {
 
    const user1 = await UserRepository.findUser(user.id);
-   console.log(user1)
 
    if (!user1.isAdmin) {
-     await ctx.reply(`⚠ <b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
+     await ctx.reply(`<b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
      return
    };
 
@@ -70,24 +70,14 @@ bot.command("plan", async (ctx) => {
 
    let userVip = await UserRepository.upgradeUserSubscription(planAndIdUser[0],planAndIdUser[1] );
 
-   console.log(userVip);
-   
+  await ctx.reply(`<b> @${userVip.username} Assinou o Plano ${userVip.subscription.plan} 🎉✅</b>`, {
+    parse_mode: 'HTML'
+  });
 
+  await bot.api.sendMessage('@Kyo_logs', `<a href="t.me/Kyo_logs">↳ </a> <code>CLIENTE COMPROU UMA ASSINATURA NO BOT COM SUCESSO💸🎉\n PLANO :  ${userVip.subscription.plan} </code>`, {
+    parse_mode: "HTML"
+  });
 
-   // let caption = await responseMessages.noRegistry(user);
-
-  // await ctx.reply(caption, {
-  //   reply_markup: {
-  //     inline_keyboard: [
-  //       [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
-  //       [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-  //       [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
-  //       { text: '[↯] AJUDA', callback_data: 'FAQ' }
-  //       ],
-  //     ]
-  //   },
-  //   parse_mode: 'HTML'
-  // });
   } catch (error) {
     console.log(error)
     await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
@@ -158,6 +148,87 @@ bot.on('callback_query:data', async ctx => {
         },
         parse_mode: 'HTML'
       });
+    }else if (callbackData == 'pwd') {
+
+
+      let user = ctx.callbackQuery.from;
+
+      try {
+        const User = await UserRepository.findUser(user.id);
+    
+        if (!User) {
+          await ctx.reply("Você não tem registro em meu sistema, envie /start");
+          return;
+        }
+    
+        if (User.subscription.plan.includes("Free")) {
+          await ctx.reply("è nescessario ter uma assinatura ativa!");
+        } 
+    
+    
+        const isExpired = User.isSubscriptionExpired();
+    
+        if (isExpired) {
+            console.log('A assinatura do usuário expirou.');
+            let caption = await responseMessages.userNotbalance(user, coisasUrl);
+    
+            await ctx.reply(caption, {
+              reply_markup: {
+                inline_keyboard: [
+                  [{ text: 'COMANDOS', callback_data: 'cmds' }],
+                  [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+                ]
+              },
+              parse_mode: 'HTML'
+            });
+            return;
+        }
+    
+        if (User.balance == 0) {
+          let caption = await responseMessages.userNotbalance(user,   coisasUrl);
+    
+          await ctx.reply(caption, {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: 'COMANDOS', callback_data: 'cmds' }],
+                [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+          return;
+        }
+
+    
+        let loadingMessage = await ctx.reply('Consultando... ⌛');
+    
+
+    
+        let result = await searchUrlInFiles(coisasUrl);
+    
+        if (result.length === 0) {
+          //await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+          await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
+          return;
+        }
+    
+        let caption = '';
+        const randomResult = getRandomItems(result);
+        if (randomResult.includes(':')) {
+          let str_result = randomResult.split(':');
+          caption = await responseMessages.pwd(user, result.length, str_result);
+        }
+    
+        await changebalance(User, 0.10);
+    
+        await ctx.reply(caption, { parse_mode: "HTML" });
+    
+      } catch (error) {
+        console.log(error);
+        await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR</i><code>${error}</code>`, {
+          parse_mode: "HTML"
+        });
+      }
     }
 
   } catch (error) {
@@ -321,6 +392,7 @@ bot.command("adm", async (ctx) => {
 bot.command("verificar", async (ctx) => {
   const urlSearch = ctx.match;
   const user = ctx.update.message.from;
+  coisasUrl = urlSearch
 
   if (!urlSearch) {
     await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
@@ -364,7 +436,8 @@ bot.command("verificar", async (ctx) => {
     clearInterval(interval);
 
     if (result.length === 0) {
-      await ctx.editMessageText('Nenhum resultado encontrado para a URL fornecida.');
+      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+      await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
       return;
     }
 
@@ -381,6 +454,8 @@ bot.command("verificar", async (ctx) => {
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
           { text: '[↯] PERFIL', callback_data: 'register' }
           ],
+          [{ text: '[↯] COMPRAR LOGIN', callback_data: 'pwd' },
+            ],
         ]
       },
       parse_mode: 'HTML'
@@ -420,6 +495,29 @@ bot.command("pw", async (ctx) => {
       return;
     }
 
+    if (User.subscription.plan.includes("Free")) {
+      await ctx.reply("è nescessario ter uma assinatura ativa!");
+    } 
+
+
+    const isExpired = User.isSubscriptionExpired();
+
+    if (isExpired) {
+        console.log('A assinatura do usuário expirou.');
+        let caption = await responseMessages.userNotbalance(user, urlSearch);
+
+        await ctx.reply(caption, {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: 'COMANDOS', callback_data: 'cmds' }],
+              [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+        return;
+    }
+
     if (User.balance == 0) {
       let caption = await responseMessages.userNotbalance(user, urlSearch);
 
@@ -454,7 +552,7 @@ bot.command("pw", async (ctx) => {
     clearInterval(interval);
 
     if (result.length === 0) {
-      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+      //await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
       await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
       return;
     }
@@ -540,7 +638,7 @@ bot.command("pwf", async (ctx) => {
     clearInterval(interval);
 
     if (result.length === 0) {
-      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+    //  await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
       await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
       return;
     }
@@ -629,7 +727,7 @@ bot.command("pwd", async (ctx) => {
     clearInterval(interval);
 
     if (result.length === 0) {
-      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+     // await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
       await ctx.reply('Nenhum resultado encontrado para o email ou usuario fornecido.');
       return;
     }
@@ -666,6 +764,131 @@ bot.command("pwd", async (ctx) => {
     });
   }
 });
+
+
+
+bot.command("cpf", async (ctx) => {
+  const cpf = ctx.match;
+  const user = ctx.update.message.from;
+
+  if (!cpf) {
+    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o cpf, por favor use o comando seguido de um cpf valido.</i>
+<a href="t.me/Kyo_logs">↳ </a><code> /cpf  cpf</code>`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: 'COMANDOS', callback_data: 'cmds' }],
+          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+        ]
+      },
+      parse_mode: 'HTML'
+    })
+    return
+  }
+
+  try {
+    const User = await UserRepository.findUser(user.id);
+
+    if (!User) {
+      await ctx.reply("Você não  tem registro em meu sistema , envie /start");
+      return
+    }
+
+  //  if (User.balance == 0) {
+//
+  //    let caption = await responseMessages.userNotbalance(user, urlSearch);
+//
+  //    await ctx.reply(caption, {
+  //      reply_markup: {
+  //        inline_keyboard: [
+  //          [{ text: 'COMANDOS', callback_data: 'cmds' }],
+  //          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+//
+  //        ]
+  //      },
+  //      parse_mode: 'HTML'
+  //    })
+  //    return
+  //  }
+
+    await ctx.api.sendChatAction(ctx.update.message.chat.id, "typing");
+
+
+    let loadingMessage = await ctx.reply('Consultando... ⌛');
+
+    const loadingStages = ['|', '/', '-', '\\'];
+    let stageIndex = 0;
+    const interval = setInterval(async () => {
+      try {
+        await ctx.editMessageText(`Consultando... ${loadingStages[stageIndex]}`);
+        stageIndex = (stageIndex + 1) % loadingStages.length;
+      } catch (editError) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    let response = await fetch(`http://198.58.117.103:8080/cadsus/cpf?cpf=${cpf}`);
+    let respJson = await response.json()
+    console.log(respJson)
+
+    clearInterval(interval);
+
+    if (respJson.Message) {
+      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+      await ctx.reply('Nenhum resultado encontrado para o cpf fornecido.');
+      return;
+    }
+
+    await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+
+    let caption1 = `
+<b> Consulta Realizada com sucesso ! ✅</b>
+
+<b>CPF</b>: <i>${respJson.cpf}</i>
+<b>CNS</b>: <i>${respJson.cns}</i>
+<b>NOME</b>: <i>${respJson.nome}</i>
+<b>SEXO</b>: <i>${respJson.sexo}</i>
+<b>RAÇA/COR</b>: <i>${respJson.raca_cor}</i>
+<b>FALECIDO</b>: <i>${respJson.falecido}</i>
+<b>DATA DE NASCIMENTO</b>: <i>${respJson.data_falecimento}</i>
+<b>MAE</b>: <i>${respJson.mae}</i>
+
+<b>FORMAS DE CONTATO </b>
+<b>CELULAR</b>: <i>${respJson.celular}</i>
+<b>TELEFONE</b>: <i>${respJson.telefone}</i>
+<b>CONTATO</b>: <i>${respJson.contato}</i>
+<b>EMAIL</b>: <i>${respJson.email}</i>
+
+<b>ENDEREÇO</b>
+<b>RUA</b>: <i>${respJson.rua}</i>
+<b>COMPLEMENTO</b>: <i>${respJson.complemento}</i>
+<b>BAIRRO</b>: <i>${respJson.bairro}</i>
+<b>CIDADE</b>: <i>${respJson.cidade}</i>
+<b>CEP</b>: <i>${respJson.cep}</i>
+<b>RG</b>: <i>${respJson.rg}</i>
+<b>ORG EMISSOR</b>: <i>${respJson.rg_orgao_emissor}</i>
+<b>EMISSAO</b>: <i>${respJson.rg_data_emissao}</i>
+<b>NIS</b>: <i>${respJson.nis}</i>
+    `
+
+    return await ctx.reply(caption1, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
+          { text: '[↯] PERFIL', callback_data: 'register' }
+          ],
+        ]
+      },
+      parse_mode: 'HTML'
+    });
+
+  } catch (error) {
+    console.log(error)
+    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
+      parse_mode: "HTML"
+    });
+  }
+});
+
 /**
  * Command for promove a vip
  */

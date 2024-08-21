@@ -77,5 +77,25 @@ UserModel.methods.calculateEndDate = function(plan) {
     return this.subscription.endDate;
 };
 
+// Method to check if subscription is expired
+UserModel.methods.isSubscriptionExpired = function() {
+    if (this.subscription.plan === 'Free') {
+        return false; // Free plan is always active
+    }
+    
+    const currentDate = new Date();
+    if (this.subscription.endDate === null) {
+        return false; // No endDate means it's an unlimited plan or has not expired
+    }
+    
+    if (currentDate > this.subscription.endDate) {
+        this.subscription.status = 'inactive'; // Update status to inactive
+        this.save(); // Save status update to the database
+        return true;
+    }
+    
+    return false;
+};
+
 const userModel = model('users', UserModel);
 export default userModel;

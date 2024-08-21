@@ -26,7 +26,8 @@ class responseMessages {
 
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Nome</b> ] : <b>${user.first_name}</b>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Saldo</b> ] : <b>R$ ${user.balance.toFixed(2)}</b>
-
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>DB</b> ] : <b>${sizer}</b>`;
             return caption;
 
@@ -39,8 +40,9 @@ class responseMessages {
      * @returns {String}
      * Function for clients with register in database
      */
+    
     cmds() {
-        let caption = `<a href="t.me/Kyo_logs">安 </a> [  <code>/pw</code>  ] » <i>Faz uma busca de login/senha pelo domínio/site </i>\n<a href="t.me/Kyo_logs">安 </a> [  <code>/verificar</code> ] » <i>verifica se tem credenciais para sua url em nossa db</i>\n<a href="t.me/Kyo_logs">安 </a> [  <code>/pwd</code> ] » <i>verifica se tem credenciais para um email ou usuario especifico em nossa db</i>`;
+        let caption = `<a href="t.me/Kyo_logs">安 </a> [  <code>/cpf</code>  ] » <i>Faz uma busca dos dados de uma pessoa com o cpf </i>\n<a href="t.me/Kyo_logs">安 </a> [  <code>/pw</code>  ] » <i>Faz uma busca de login/senha pelo domínio/site </i>\n<a href="t.me/Kyo_logs">安 </a> [  <code>/verificar</code> ] » <i>verifica se tem credenciais para sua url em nossa db</i>\n<a href="t.me/Kyo_logs">安 </a> [  <code>/pwd</code> ] » <i>verifica se tem credenciais para um email ou usuario especifico em nossa db</i>`;
         return caption
     }
 
@@ -58,7 +60,8 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <i>${url}</i>
 <a href="t.me/Kyo_logs">↳ </a>[ <i>QUANTIDADE DE LOGS</i> ] : <i>${result}</i>
 <a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
-
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
         return caption;
     }
@@ -73,11 +76,12 @@ class responseMessages {
 
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Opa amigão é nescessario ter creditos para desfrutar deste comando! favor realize uma recarga!</i>\n
 <a href="t.me/Kyo_logs">安 </a> » <i>Chame algum de nossos adm a baixo !!</i>
-<a href="t.me/Kyo_logs">安 </a> » <i> @TODORIKOBINS</i>
 <a href="t.me/Kyo_logs">安 </a> » <i> @ImKarmax</i>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <i>${url}</i>
 <a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
         return caption;
@@ -100,6 +104,8 @@ class responseMessages {
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>QUANTIDADE DE LOGS</i> ] : <i>${total}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
             return caption;
@@ -113,6 +119,8 @@ class responseMessages {
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>QUANTIDADE DE LOGS</i> ] : <i>${total}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
         return caption;
@@ -133,6 +141,8 @@ class responseMessages {
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>QUANTIDADE DE LOGS</i> ] : <i>${total}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>DB</i> ] : <i>${sizer}</i>`;
         return caption;
@@ -168,7 +178,8 @@ class responseMessages {
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Olá ${userID.first_name}, nescessita realizar uma recarga?</i>
 
 <a href="t.me/Kyo_logs">安 </a> » <i>Chame nosso adm a baixo !!</i>
-<a href="t.me/Kyo_logs">安 </a> » <i> @TODORIKOBINS</i>
+<a href="t.me/Kyo_logs">安 </a> » <i> @Im_karmah</i>
+<a href="t.me/Kyo_logs">安 </a> » <i> @Yakultzada</i>
 `;
         return caption;
     }

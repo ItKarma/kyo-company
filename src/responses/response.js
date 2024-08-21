@@ -1,7 +1,5 @@
 import UserRepository from "../repository/userRepo.js";
 import "dotenv/config";
-import { getFolderSize } from '../utils/read_path.js'; // Ajuste o caminho conforme necessário
-
 
 class responseMessages {
     /**
@@ -10,8 +8,6 @@ class responseMessages {
      * Function for clients no register in database
      */
     async noRegistry(userID) {
-
-        let sizer = await getFolderSize();
 
         try {
             let user = await UserRepository.findUser(userID.id);
@@ -28,7 +24,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Saldo</b> ] : <b>R$ ${user.balance.toFixed(2)}</b>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <b>DB</b> ] : <b>${sizer}</b>`;
+`;
             return caption;
 
         } catch (error) {
@@ -48,7 +44,6 @@ class responseMessages {
 
     async verify(userID, url, result) {
 
-        let sizer = await getFolderSize();
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
@@ -68,7 +63,6 @@ class responseMessages {
 
     async userNotbalance(userID, url) {
 
-        let sizer = await getFolderSize();
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
@@ -79,7 +73,7 @@ class responseMessages {
 <a href="t.me/Kyo_logs">安 </a> » <i> @ImKarmax</i>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <i>${url}</i>
-<a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance}</i>
+<a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
@@ -87,37 +81,19 @@ class responseMessages {
         return caption;
     }
 
-    async pwd(userID, total, result) {
+    async pwd(userID, result) {
 
-        let sizer = await getFolderSize();
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
         }
 
-        if (result.length == 4) {
-            let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
-
-<a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <code>${result[1].replace("//", "")}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>USER</i> ] : <code>${result[2]}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>PASS</i> ] : <code>${result[3]}</code>
-
-<a href="t.me/Kyo_logs">↳ </a> [ <i>QUANTIDADE DE LOGS</i> ] : <i>${total}</i>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
-<a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
-
-`;
-            return caption;
-        }
-
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <code>${result[0]}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>USER</i> ] : <code>${result[1]}</code>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>PASS</i> ] : <code>${result[2]}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <code>${result.url}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <i>USER</i> ] : <code>${result.user}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <i>PASS</i> ] : <code>${result.pass}</code>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>QUANTIDADE DE LOGS</i> ] : <i>${total}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
@@ -128,7 +104,6 @@ class responseMessages {
 
     async email(userID, total, email) {
 
-        let sizer = await getFolderSize();
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);

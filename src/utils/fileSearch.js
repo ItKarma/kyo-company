@@ -1,95 +1,90 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { Worker, isMainThread, parentPort, workerData } from 'worker_threads';
+import sqlite3 from 'sqlite3';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const pastaDados = path.join(__dirname, '../db_urls');
+const db = new sqlite3.Database('data.db');
 
-// Função para criar o worker
-function createWorker(arquivo, url) {
+const searchUrl = (searchTerm) => {
     return new Promise((resolve, reject) => {
-        const worker = new Worker(__filename, {
-            workerData: { arquivo, url },
-        });
-
-        worker.on('message', resolve);
-        worker.on('error', reject);
-        worker.on('exit', (code) => {
-            if (code !== 0) {
-                reject(new Error(`Worker stopped with exit code ${code}`));
+        db.all('SELECT * FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
             }
         });
     });
-}
+};
 
-// Código do worker, que será executado se o arquivo for executado como um worker
-if (!isMainThread) {
-    const { arquivo, url } = workerData;
-    const caminhoArquivo = path.join(pastaDados, arquivo);
+const getRandomItem = (array) => {
+    if (array.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+};
 
-    async function workerTask() {
-        try {
-            console.log(`Memória usada: ${process.memoryUsage().heapUsed / 1024 / 1024} MB`);
-
-            const resultados = [];
-            const stream = fs.createReadStream(caminhoArquivo, { encoding: 'utf-8' });
-
-            stream.on('data', (chunk) => {
-                chunk.split('\n').forEach(linha => {
-                    if (linha.includes(url)) {
-                        resultados.push(linha);
-                    }
-                });
-            });
-
-            stream.on('end', () => {
-                parentPort.postMessage(resultados);
-            });
-
-            stream.on('error', (err) => {
-                parentPort.postMessage({ error: err.message });
-            });
-        } catch (err) {
-            parentPort.postMessage({ error: err.message });
-        }
-    }
-
-    workerTask();
-}
-
-export async function searchUrlInFiles(url) {
-    const arquivos = await fs.promises.readdir(pastaDados);
-    const resultados = [];
-
-    // Limite de workers ativos
-    const maxThreads = 4;
-    let activeThreads = 0;
-
-    for (const arquivo of arquivos) {
-        if (activeThreads >= maxThreads) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
+async function getResults(url) {
+    try {
+        let results = await searchUrl(url)
+        const randomResult = getRandomItem(results);
+        if (randomResult) {
+            return randomResult
         }
 
-        activeThreads++;
-        createWorker(arquivo, url)
-            .then((res) => {
-                if (res.error) {
-                    console.error(`Erro ao processar o arquivo ${arquivo}: ${res.error}`);
-                } else {
-                    resultados.push(...res);
-                }
-            })
-            .finally(() => {
-                activeThreads--;
-            });
+        return
+
+    } catch (error) {
+        console.log(error)
     }
 
-    console.log(`Memória final: ${process.memoryUsage().heapUsed / 1024 / 1024} MB`);
-    while (activeThreads > 0) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    return resultados;
 }
+
+ async function getAllResults(url) {
+    try {
+        let results = await searchUrl(url)
+        if (results) {
+            return results
+        }
+
+        return
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+const countUsersForUrl = (searchTerm) => {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(user) AS userCount FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.userCount);
+            }
+        });
+    });
+};
+
+const countUsersByUsername = (username) => {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(*) AS userCount FROM urls WHERE user = ?', [username], (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.userCount);
+            }
+        });
+    });
+};
+
+const countTotalUsers = () => {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(*) AS totalUsers FROM urls', (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(row.totalUsers);
+            }
+        });
+    });
+};
+
+
+export { countUsersForUrl, countUsersByUsername , getAllResults, getResults,countTotalUsers}

@@ -16,6 +16,7 @@ import fss from 'fs/promises';
 import { InputFile } from "grammy";
 import chalk from "chalk";
 import importAllFiles from "./utils/convertDb.js";
+const { exec } = require('child_process');
 bot.use(hydrateReply);
 
 const __filename = fileURLToPath(import.meta.url);

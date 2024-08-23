@@ -53,7 +53,7 @@ async function getAllResults(url) {
 
 const countUsersForUrl = (searchTerm) => {
     return new Promise((resolve, reject) => {
-    //    console.log('Searching for:', searchTerm); // Verifique o valor de searchTerm
+        console.log('Searching for:', searchTerm); // Verifique o valor de searchTerm
         db.get('SELECT COUNT(*) AS userCount FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, row) => {
             if (err) {
                 console.error('Query Error:', err);

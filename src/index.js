@@ -485,29 +485,10 @@ bot.command("pw", async (ctx) => {
       return;
     }
 
-    if (User.subscription.plan.includes("Free")) {
-      await ctx.reply("è nescessario ter uma assinatura ativa!");
-    }
-
 
     const isExpired = User.isSubscriptionExpired();
-
-
-    if (isExpired) {
-      console.log('A assinatura do usuário expirou.');
-      let caption = await responseMessages.userNotbalance(user, urlSearch);
-
-      await ctx.reply(caption, {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
-          ]
-        },
-        parse_mode: 'HTML'
-      });
-      return;
-    } else if (User.balance == 0) {
+    
+    if (User.balance == 0 || User.subscription.plan.includes("Free") || isExpired) {
       let caption = await responseMessages.userNotbalance(user, urlSearch);
 
       await ctx.reply(caption, {

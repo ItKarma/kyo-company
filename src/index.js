@@ -736,7 +736,7 @@ bot.command("pwd", async (ctx) => {
     clearInterval(interval);
 
     if (result === 0) {
-      // await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+       await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
       await ctx.reply('Nenhum resultado encontrado para o email ou usuario fornecido.');
       return;
     }

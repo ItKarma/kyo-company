@@ -70,7 +70,7 @@ const countUsersForUrl = (searchTerm) => {
 
 
 const countUsersByUsername = (username) => {
-
+console.log(username)
     return new Promise((resolve, reject) => {
         db.get('SELECT COUNT(*) AS userCount FROM urls WHERE user = ?', [username], (err, row) => {
             if (err) {

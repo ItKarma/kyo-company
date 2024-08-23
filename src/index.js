@@ -45,7 +45,7 @@ bot.command("start", async (ctx) => {
 
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: start</i>\n<i>ERROR</i>\n<code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -245,7 +245,7 @@ bot.command("gift", async (ctx) => {
 
   try {
 
-    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${username}`));
 
     const user = await UserRepository.findUser(id);
 
@@ -281,7 +281,7 @@ bot.command("resgatar", async (ctx) => {
   const userctx = ctx.update.message.from;
 
   try {
-    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${userctx.username}`));
     const user = await UserRepository.findUser(userctx.id);
 
     if (!user) {
@@ -334,15 +334,13 @@ bot.command("resgatar", async (ctx) => {
   }
 });
 
-/**
- * Command for promove a adm
- */
 bot.command("adm", async (ctx) => {
-
-  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
   const meId = ctx.update.message?.reply_to_message?.from?.id;
   const { id, username } = ctx.update.message.from;
+
+  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${username}`));
+
 
   try {
     const user = await UserRepository.findUser(id);
@@ -828,39 +826,6 @@ bot.command("cpf", async (ctx) => {
     await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
       parse_mode: "HTML"
     });
-  }
-});
-
-bot.command("vip", async (ctx) => {
-  const { text } = ctx.update.message;
-  const { id } = ctx.update.message.from;
-  const valuesText = text.split(" ");
-  try {
-    if (!valuesText[1]) {
-      return await ctx.reply(
-        `Por favor Envie o ID do usuario 𝐄𝐱: /adm id do cliente`
-      );
-    }
-
-    const { isAdmin, username } = await UserRepository.findUser(id);
-
-    if (!isAdmin || username !== "kyokiOne")
-      return ctx.reply(`Usuario não é um adm para usar este comando`);
-
-    if (!(await UserRepository.findUser(valuesText[1])))
-      return ctx.reply(`Usuario não é existe em meu banco de dados`);
-
-    const user = await UserRepository.changeVip(valuesText[1]);
-
-    if (!user.isVip) {
-      return await ctx.reply(
-        `𝑶 𝒖𝒔𝒖𝒂𝒓𝒊𝒐 @${user.username} 𝒂𝒄𝒂𝒃𝒐𝒖 𝒅𝒆 virar um menbro vip 😎💸🎉 `
-      );
-    } else {
-      return await ctx.reply(`𝑶 𝒖𝒔𝒖𝒂𝒓𝒊𝒐 @${user.username} ja é vip `);
-    }
-  } catch (error) {
-    console.log(error)
   }
 });
 

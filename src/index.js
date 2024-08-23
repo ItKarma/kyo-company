@@ -678,23 +678,6 @@ bot.command("pwd", async (ctx) => {
       return
     }
 
-    if (User.balance == 0) {
-
-      let caption = await responseMessages.userNotbalance(user, emailSearch);
-
-      await ctx.reply(caption, {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
-
-          ]
-        },
-        parse_mode: 'HTML'
-      })
-      return
-    }
-
     await ctx.api.sendChatAction(ctx.update.message.chat.id, "typing");
 
 

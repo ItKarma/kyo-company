@@ -487,8 +487,8 @@ bot.command("pw", async (ctx) => {
 
 
     const isExpired = User.isSubscriptionExpired();
-    
-    if (User.balance == 0 || User.subscription.plan.includes("Free") || isExpired) {
+
+    if (User.balance == 0 && User.subscription.plan.includes("Free") && isExpired) {
       let caption = await responseMessages.userNotbalance(user, urlSearch);
 
       await ctx.reply(caption, {

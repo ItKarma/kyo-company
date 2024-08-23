@@ -559,6 +559,29 @@ bot.command("pw", async (ctx) => {
   }
 });
 
+bot.command('update', async (ctx) => {
+  const authorizedUserId = 5248583156; 
+
+  if (ctx.from.id === authorizedUserId) {
+      ctx.reply('Atualizando o bot...');
+
+      exec('cd /kyo-company && git pull origin main && pm2 reload bot_logs', (error, stdout, stderr) => {
+          if (error) {
+              console.error(`Erro ao atualizar: ${error.message}`);
+              return ctx.reply(`Erro ao atualizar: ${error.message}`);
+          }
+          if (stderr) {
+              console.error(`Stderr: ${stderr}`);
+              return ctx.reply(`Erro ao atualizar: ${stderr}`);
+          }
+
+          ctx.reply(`Bot atualizado com sucesso! Saída: ${stdout}`);
+      });
+  } else {
+      ctx.reply('Você não tem permissão para usar esse comando.');
+  }
+});
+
 bot.command("pwf", async (ctx) => {
   const urlSearch = ctx.match;
   const user = ctx.update.message.from;

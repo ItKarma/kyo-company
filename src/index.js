@@ -52,36 +52,35 @@ bot.command("start", async (ctx) => {
 
 bot.command("convert", async (ctx) => {
   try {
-      const user = ctx.update.message.from;
-      console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
-      await importAllFiles();
-      let totalUsers = await countTotalUsers(); 
-      await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
-          reply_markup: {
-              inline_keyboard: [
-                  [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
-                  [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-                  [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
-                  { text: '[↯] AJUDA', callback_data: 'FAQ' }],
-              ]
-          },
-          parse_mode: 'HTML'
-      });
+    const user = ctx.update.message.from;
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+    await importAllFiles();
+    let totalUsers = await countTotalUsers();
+    await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
+          [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
+          [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
+          { text: '[↯] AJUDA', callback_data: 'FAQ' }],
+        ]
+      },
+      parse_mode: 'HTML'
+    });
 
-      console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+    console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
-      await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: convert</i>\n<i>ERROR</i><code>${error.message}</code>`, {
-          parse_mode: "HTML"
-      });
+    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: convert</i>\n<i>ERROR</i><code>${error.message}</code>`, {
+      parse_mode: "HTML"
+    });
   }
 });
 
 bot.command("plan", async (ctx) => {
-  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
   const user = ctx.update.message.from;
   let textId = ctx.match;
   let planAndIdUser = textId.split("|");
-
+  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
   try {
 
     const user1 = await UserRepository.findUser(user.id);
@@ -406,7 +405,9 @@ bot.command("verificar", async (ctx) => {
   const urlSearch = ctx.match;
   const user = ctx.update.message.from;
   coisasUrl = urlSearch
+
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+
   if (!urlSearch) {
     await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
 <a href="t.me/Kyo_logs">↳ </a><code> /verificar  facebook.com</code>`, {
@@ -431,8 +432,15 @@ bot.command("verificar", async (ctx) => {
 
 
     let loadingMessage = await ctx.reply('Consultando... ⌛');
+    let url = urlSearch;
 
-    let result = await countUsersForUrl(urlSearch);
+    if (urlSearch.includes(":")) {
+       url = urlSearch.split("://");
+    }
+
+
+
+    let result = await countUsersForUrl(url[1]);
 
     if (!result) {
       await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
@@ -444,7 +452,7 @@ bot.command("verificar", async (ctx) => {
 
     let caption = await responseMessages.verify(user, urlSearch, result);
 
-    return await ctx.reply(caption, {
+     await ctx.reply(caption, {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
@@ -532,9 +540,16 @@ bot.command("pw", async (ctx) => {
 
     await ctx.api.sendChatAction(ctx.update.message.chat.id, "typing");
 
-    let loadingMessage = await ctx.reply('Consultando... ⌛');
+    let loadingMessage = await ctx.reply('Consultando... ⌛');;
 
-    let result = await getResults(urlSearch);
+    let url = urlSearch;
+
+    if (urlSearch.includes(":")) {
+       url = urlSearch.split("://");
+    }
+
+
+    let result = await getResults(url[1]);
 
     if (!result) {
       await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
@@ -879,7 +894,7 @@ bot.command("vip", async (ctx) => {
 bot.command('upload', async (ctx) => {
   let text = ctx.match;
   let { id, username } = ctx.update.message.from;
-  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${username}`));
   try {
     let user = await UserRepository.findUser(id);
 

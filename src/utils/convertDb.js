@@ -58,11 +58,47 @@ async function importFile(filePath) {
         crlfDelay: Infinity
     });
 
-    for await (const line of rl) {
-        const [url, user, pass] = line.split(':');
-        await runQuery('INSERT INTO urls (url, user, pass) VALUES (?, ?, ?)', [url, user, pass]);
+    const batchSize = 1000; // Número de linhas por lote
+    let batch = [];
+    
+    await runQuery('BEGIN TRANSACTION'); // Inicia a transação
+
+    try {
+        for await (const line of rl) {
+            let http = '';
+            let urlUserPass = '';
+            
+            if (line.includes("://")) {
+                [http, urlUserPass] = line.split("://");
+            } else {
+                urlUserPass = line; // Se não tiver "://", 
+            }
+            
+            const [url, user, pass] = urlUserPass.split(':');
+          //  console.log(url, user, pass);
+            batch.push([url, user, pass]);
+
+
+            if (batch.length >= batchSize) {
+                const placeholders = batch.map(() => '(?, ?, ?)').join(', ');
+                const flatBatch = batch.flat();
+                await runQuery(`INSERT INTO urls (url, user, pass) VALUES ${placeholders}`, flatBatch);
+                batch = []; // Limpa o lote
+            }
+        }
+
+        // Insere o restante do lote se houver
+        if (batch.length > 0) {
+            const placeholders = batch.map(() => '(?, ?, ?)').join(', ');
+            const flatBatch = batch.flat();
+            await runQuery(`INSERT INTO urls (url, user, pass) VALUES ${placeholders}`, flatBatch);
+        }
+    } finally {
+        await runQuery('COMMIT'); // Comita a transação
     }
 }
+
+
 
 async function deleteFile(filePath) {
     return fs.promises.unlink(filePath); // Remove o arquivo

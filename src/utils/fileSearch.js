@@ -8,6 +8,7 @@ const searchUrl = (searchTerm) => {
             if (err) {
                 reject(err);
             } else {
+                console.log(rows)
                 resolve(rows);
             }
         });
@@ -36,8 +37,9 @@ async function getResults(url) {
 
 }
 
- async function getAllResults(url) {
+async function getAllResults(url) {
     try {
+
         let results = await searchUrl(url)
         if (results) {
             return results
@@ -52,17 +54,22 @@ async function getResults(url) {
 
 const countUsersForUrl = (searchTerm) => {
     return new Promise((resolve, reject) => {
-        db.get('SELECT COUNT(user) AS userCount FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, row) => {
+    //    console.log('Searching for:', searchTerm); // Verifique o valor de searchTerm
+        db.get('SELECT COUNT(*) AS userCount FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, row) => {
             if (err) {
+                console.error('Query Error:', err);
                 reject(err);
             } else {
+               // console.log('Query Result:', row); // Verifique o resultado da consulta
                 resolve(row.userCount);
             }
         });
     });
 };
 
+
 const countUsersByUsername = (username) => {
+
     return new Promise((resolve, reject) => {
         db.get('SELECT COUNT(*) AS userCount FROM urls WHERE user = ?', [username], (err, row) => {
             if (err) {
@@ -87,4 +94,4 @@ const countTotalUsers = () => {
 };
 
 
-export { countUsersForUrl, countUsersByUsername , getAllResults, getResults,countTotalUsers}
+export { countUsersForUrl, countUsersByUsername, getAllResults, getResults, countTotalUsers }

@@ -1,5 +1,7 @@
 import UserRepository from "../repository/userRepo.js";
 import "dotenv/config";
+import { countTotalUsers } from "../utils/fileSearch.js";
+import formatNumber from "../utils/formatNumber.js";
 
 class responseMessages {
     /**
@@ -9,6 +11,9 @@ class responseMessages {
      */
     async noRegistry(userID) {
 
+
+        let totalUsers = await countTotalUsers();
+        let formatTotal = formatNumber(totalUsers)
         try {
             let user = await UserRepository.findUser(userID.id);
 
@@ -24,6 +29,8 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Saldo</b> ] : <b>R$ ${user.balance.toFixed(2)}</b>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
+
+<a href="t.me/Kyo_logs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
             return caption;
 
@@ -44,6 +51,10 @@ class responseMessages {
 
     async verify(userID, url, result) {
 
+        let totalUsers = await countTotalUsers();
+        let formatTotal = formatNumber(totalUsers)
+
+
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
@@ -57,12 +68,15 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
+
+<a href="t.me/Kyo_logs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
 
     async userNotbalance(userID, url) {
-
+        let totalUsers = await countTotalUsers();
+        let formatTotal = formatNumber(totalUsers)
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
@@ -77,12 +91,15 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
+<a href="t.me/Kyo_logs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+
 `;
         return caption;
     }
 
     async pwd(userID, result) {
-
+        let totalUsers = await countTotalUsers();
+        let formatTotal = formatNumber(totalUsers)
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
@@ -98,12 +115,14 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
+<a href="t.me/Kyo_logs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
 
     async email(userID, total, email) {
-
+        let totalUsers = await countTotalUsers();
+        let formatTotal = formatNumber(totalUsers)
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
@@ -119,11 +138,14 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
+<a href="t.me/Kyo_logs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
 
     async faq(userID) {
+        let totalUsers = await countTotalUsers();
+        let formatTotal = formatNumber(totalUsers);
 
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
@@ -138,6 +160,8 @@ class responseMessages {
 <a href="t.me/Kyo_logs">↳ </a> [ <i>Como Funciona?</i> ]\n<i>Aperte em comandos para saber mais!.</i>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <i>Termos de Uso</i> ] : <i>Ao usar o bot, você aceita nossos termos. Abusos podem levar a penalidades como bloqueio ou redução de saldo. Não nos responsablizamos por o uso  em atividades ilegais. Reembolsos só são possíveis se o bot tiver algum erro, é nescessario prints sem borrar nada, e não garantimos logins sem segurança, consulte a plataforma da qual voce deseja o login, não garantimos live!.</i>
+
+<a href="t.me/Kyo_logs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }

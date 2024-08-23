@@ -262,7 +262,7 @@ bot.command("gift", async (ctx) => {
 
     let createdGift = await createGift(amount, user._id);
 
-    await ctx.reply(`<a href="t.me/Kyo_logs">↳ </a> <b>GIFT GERADO COM SUCESSO VALOR R$ ${createGift.creditAmount}!!</b> \n<a href="t.me/Kyo_logs">↳ </a><code>/resgatar ${createGift.code}</code>`, {
+    await ctx.reply(`<a href="t.me/Kyo_logs">↳ </a> <b>GIFT GERADO COM SUCESSO VALOR R$ ${createdGift.creditAmount}!!</b> \n<a href="t.me/Kyo_logs">↳ </a><code>/resgatar ${createdGift.code}</code>`, {
       parse_mode: "HTML"
     });
 

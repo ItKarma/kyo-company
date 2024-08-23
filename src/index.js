@@ -701,7 +701,7 @@ bot.command("pwd", async (ctx) => {
 
     if (User.balance == 0) {
 
-      let caption = await responseMessages.userNotbalance(user, urlSearch);
+      let caption = await responseMessages.userNotbalance(user, emailSearch);
 
       await ctx.reply(caption, {
         reply_markup: {

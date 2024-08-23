@@ -414,15 +414,16 @@ bot.command("verificar", async (ctx) => {
 
 
     let loadingMessage = await ctx.reply('Consultando... ⌛');
+
+    let result = ''
     let url = urlSearch;
 
-    if (urlSearch.includes(":")) {
+    if (urlSearch.startsWith("://")) {
       url = urlSearch.split("://");
+      result = await countUsersForUrl(url[1]);
+    } else {
+      result = await countUsersForUrl(url);
     }
-
-
-
-    let result = await countUsersForUrl(url[1]);
 
     if (!result) {
       await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
@@ -526,7 +527,7 @@ bot.command("pw", async (ctx) => {
 
     let result = ''
     let url = urlSearch;
-    console.log(url)
+
     if (urlSearch.startsWith("://")) {
       url = urlSearch.split("://");
       result = await getResults(url[1]);

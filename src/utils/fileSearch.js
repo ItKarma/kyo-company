@@ -3,13 +3,11 @@ import sqlite3 from 'sqlite3';
 const db = new sqlite3.Database('data.db');
 
 const searchUrl = (searchTerm) => {
-console.log(searchTerm)
     return new Promise((resolve, reject) => {
         db.all('SELECT * FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
-                console.log(rows)
                 resolve(rows);
             }
         });
@@ -70,7 +68,6 @@ const countUsersForUrl = (searchTerm) => {
 
 
 const countUsersByUsername = (username) => {
-console.log(username)
     return new Promise((resolve, reject) => {
         db.get('SELECT COUNT(*) AS userCount FROM urls WHERE user = ?', [username], (err, row) => {
             if (err) {

@@ -55,6 +55,7 @@ bot.command("convert", async (ctx) => {
     const user = ctx.update.message.from;
     console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
     await importAllFiles();
+
     let totalUsers = await countTotalUsers();
     await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
       reply_markup: {
@@ -225,7 +226,15 @@ bot.on('callback_query:data', async ctx => {
         }
 
 
-        let result = await getResults(coisasUrl);
+        let result = ''
+        let url = urlSearch;
+        console.log(url)
+        if (urlSearch.startsWith("://")) {
+           url = urlSearch.split("://");
+           result = await getResults(url[1]);
+        } else {
+          result = await getResults(url);
+        }
 
         if (!result) {
           await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
@@ -542,14 +551,16 @@ bot.command("pw", async (ctx) => {
 
     let loadingMessage = await ctx.reply('Consultando... ⌛');;
 
+    let result = ''
     let url = urlSearch;
-
-    if (urlSearch.includes(":")) {
+    console.log(url)
+    if (urlSearch.startsWith("://")) {
        url = urlSearch.split("://");
+       result = await getResults(url[1]);
+    } else {
+      result = await getResults(url);
     }
 
-
-    let result = await getResults(url[1]);
 
     if (!result) {
       await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);

@@ -50,33 +50,6 @@ bot.command("start", async (ctx) => {
   }
 });
 
-bot.command("convert", async (ctx) => {
-  try {
-    const user = ctx.update.message.from;
-    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
-    await importAllFiles();
-
-    let totalUsers = await countTotalUsers();
-    await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
-          [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-          [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
-          { text: '[↯] AJUDA', callback_data: 'FAQ' }],
-        ]
-      },
-      parse_mode: 'HTML'
-    });
-
-    console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
-  } catch (error) {
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: convert</i>\n<i>ERROR</i><code>${error.message}</code>`, {
-      parse_mode: "HTML"
-    });
-  }
-});
-
 bot.command("plan", async (ctx) => {
   const user = ctx.update.message.from;
   let textId = ctx.match;
@@ -227,11 +200,11 @@ bot.on('callback_query:data', async ctx => {
 
 
         let result = ''
-        let url = urlSearch;
-        console.log(url)
-        if (urlSearch.startsWith("://")) {
-           url = urlSearch.split("://");
-           result = await getResults(url[1]);
+        let url = coisasUrl;
+
+        if (coisasUrl.startsWith("://")) {
+          url = coisasUrl.split("://");
+          result = await getResults(url[1]);
         } else {
           result = await getResults(url);
         }
@@ -444,7 +417,7 @@ bot.command("verificar", async (ctx) => {
     let url = urlSearch;
 
     if (urlSearch.includes(":")) {
-       url = urlSearch.split("://");
+      url = urlSearch.split("://");
     }
 
 
@@ -461,7 +434,7 @@ bot.command("verificar", async (ctx) => {
 
     let caption = await responseMessages.verify(user, urlSearch, result);
 
-     await ctx.reply(caption, {
+    await ctx.reply(caption, {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
@@ -555,8 +528,8 @@ bot.command("pw", async (ctx) => {
     let url = urlSearch;
     console.log(url)
     if (urlSearch.startsWith("://")) {
-       url = urlSearch.split("://");
-       result = await getResults(url[1]);
+      url = urlSearch.split("://");
+      result = await getResults(url[1]);
     } else {
       result = await getResults(url);
     }
@@ -736,7 +709,7 @@ bot.command("pwd", async (ctx) => {
     clearInterval(interval);
 
     if (result === 0) {
-       await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
       await ctx.reply('Nenhum resultado encontrado para o email ou usuario fornecido.');
       return;
     }
@@ -975,7 +948,24 @@ bot.command('upload', async (ctx) => {
         await ctx.reply('Erro ao salvar o arquivo');
       });
 
+      await importAllFiles();
+
+      let totalUsers = await countTotalUsers();
+
+      await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
+            [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
+            [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
+            { text: '[↯] AJUDA', callback_data: 'FAQ' }],
+          ]
+        },
+        parse_mode: 'HTML'
+      });
+
       console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+
     } else {
       await ctx.reply('Por favor, envie um link para um arquivo.');
     }

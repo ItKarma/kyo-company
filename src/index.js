@@ -566,7 +566,7 @@ bot.command('update', async (ctx) => {
   if (ctx.from.id === authorizedUserId) {
       ctx.reply('Atualizando o bot...');
 
-      exec('cd /kyo-company && git pull origin main && pm2 reload bot_logs', (error, stdout, stderr) => {
+      exec('git pull origin main && pm2 reload bot_logs', (error, stdout, stderr) => {
           if (error) {
               console.error(`Erro ao atualizar: ${error.message}`);
               return ctx.reply(`Erro ao atualizar: ${error.message}`);

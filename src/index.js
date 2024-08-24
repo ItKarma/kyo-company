@@ -545,7 +545,7 @@ bot.command('update', async (ctx) => {
   if (ctx.from.id === authorizedUserId) {
       ctx.reply('Atualizando o bot...');
 
-      exec('git pull origin main && pm2 reload bot_logs', (error, stdout, stderr) => {
+      exec('git pull origin main && pm2 reload bot_logs', async (error, stdout, stderr) => {
           if (error) {
               console.error(`Erro ao atualizar: ${error.message}`);
               return ctx.reply(`Erro ao atualizar: ${error.message}`);
@@ -555,7 +555,9 @@ bot.command('update', async (ctx) => {
               return ctx.reply(`Erro ao atualizar: ${stderr}`);
           }
 
-          ctx.reply(`Bot atualizado com sucesso! Saída: ${stdout}`);
+          await bot.api.sendMessage(1854636472, `<a href="t.me/Kyo_logs">↳ </a> <i>ATUALIZADO COM SUCESSO! ✅</i>`, {
+            parse_mode: "HTML"
+          });
       });
   } else {
       ctx.reply('Você não tem permissão para usar esse comando.');

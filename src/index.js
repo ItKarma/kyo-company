@@ -887,9 +887,27 @@ bot.command('upload', async (ctx) => {
       fileStream.on('finish', async () => {
         try {
 
+          await importAllFiles();
+
           await ctx.reply(`<i>UPLOAD REALIZADO COM SUCESSO! ✅</i>`, {
             parse_mode: "HTML"
           });
+
+          let totalUsers = await countTotalUsers();
+    
+          await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
+                [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
+                [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
+                { text: '[↯] AJUDA', callback_data: 'FAQ' }],
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+
+
 
         } catch (err) {
           console.error('Erro ao calcular o tamanho da pasta:', err);
@@ -900,22 +918,6 @@ bot.command('upload', async (ctx) => {
       fileStream.on('error', async (err) => {
         console.error('Erro ao salvar o arquivo:', err);
         await ctx.reply('Erro ao salvar o arquivo');
-      });
-
-      await importAllFiles();
-
-      let totalUsers = await countTotalUsers();
-
-      await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
-            [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
-            { text: '[↯] AJUDA', callback_data: 'FAQ' }],
-          ]
-        },
-        parse_mode: 'HTML'
       });
 
       console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));

@@ -85,7 +85,6 @@ class responseMessages {
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Opa amigão é nescessario ter creditos para desfrutar deste comando! favor realize uma recarga!</i>\n
 <a href="t.me/Kyo_logs">安 </a> » <i>Chame algum de nossos adm a baixo !!</i>
 <a href="t.me/Kyo_logs">安 </a> » <i> @TODORIKOBINS</i>
-<a href="t.me/Kyo_logs">安 </a> » <i> @ImKarmax</i>
 
 <a href="t.me/Kyo_logs">↳ </a> [ <b>URL</b> ] : <code>${url}</code>
 <a href="t.me/Kyo_logs">↳ </a>[ <b>SALDO</b> ] : <code>${user.balance.toFixed(2)}</code>
@@ -178,7 +177,6 @@ class responseMessages {
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Olá ${userID.first_name}, nescessita realizar uma recarga?</i>
 
 <a href="t.me/Kyo_logs">安 </a> » <i>Chame nosso adm a baixo !!</i>
-<a href="t.me/Kyo_logs">安 </a> » <i> @Im_karmah</i>
 <a href="t.me/Kyo_logs">安 </a> » <i> @TODORIKOBINS</i>
 `;
         return caption;

@@ -25,8 +25,8 @@ class responseMessages {
             let caption = `<a href="t.me/Kyo_logs">安 </a> » <b>Olá ${user.first_name}, Sou KyoCloud</b>
 <a href="t.me/Kyo_logs">↯ </a> » <b>Gostaria de realizar uma consulta?, veio no bot certo!</b>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <b>Nome</b> ] : <b>${user.first_name}</b>
-<a href="t.me/Kyo_logs">↳ </a> [ <b>Saldo</b> ] : <b>R$ ${user.balance.toFixed(2)}</b>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Nome</b> ] :  <code> ${user.first_name}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>Saldo</b> ] :  <code> R$ ${user.balance.toFixed(2)}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
@@ -63,9 +63,9 @@ class responseMessages {
 
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <i>${url}</i>
-<a href="t.me/Kyo_logs">↳ </a>[ <i>QUANTIDADE DE LOGS</i> ] : <i>${result}</i>
-<a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>URL</b> ] : <code>${url}</code>
+<a href="t.me/Kyo_logs">↳ </a>[ <b>QUANTIDADE DE LOGS</b> ] : <code>${result}</code>
+<a href="t.me/Kyo_logs">↳ </a>[ <b>SALDO</b> ] : <code>${user.balance.toFixed(2)}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
@@ -84,10 +84,11 @@ class responseMessages {
 
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Opa amigão é nescessario ter creditos para desfrutar deste comando! favor realize uma recarga!</i>\n
 <a href="t.me/Kyo_logs">安 </a> » <i>Chame algum de nossos adm a baixo !!</i>
+<a href="t.me/Kyo_logs">安 </a> » <i> @TODORIKOBINS</i>
 <a href="t.me/Kyo_logs">安 </a> » <i> @ImKarmax</i>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>URL</i> ] : <i>${url}</i>
-<a href="t.me/Kyo_logs">↳ </a>[ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>URL</b> ] : <code>${url}</code>
+<a href="t.me/Kyo_logs">↳ </a>[ <b>SALDO</b> ] : <code>${user.balance.toFixed(2)}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
@@ -131,10 +132,10 @@ class responseMessages {
 
         let caption = `<a href="t.me/Kyo_logs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>USER</i> ] : <code>${email}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>USER</b> ] : <code>${email}</code>
 
-<a href="t.me/Kyo_logs">↳ </a> [ <i>QUANTIDADE DE LOGS</i> ] : <i>${total}</i>
-<a href="t.me/Kyo_logs">↳ </a> [ <i>SALDO</i> ] : <i>${user.balance.toFixed(2)}</i>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>QUANTIDADE DE LOGS</b> ] : <code>${total}</code>
+<a href="t.me/Kyo_logs">↳ </a> [ <b>SALDO</b> ] : <code>${user.balance.toFixed(2)}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Plano</b> ] : <code> ${user.subscription.plan}</code>
 <a href="t.me/Kyo_logs">↳ </a> [ <b>Status</b> ] : <code> ${user.subscription.status}</code>
 
@@ -178,7 +179,7 @@ class responseMessages {
 
 <a href="t.me/Kyo_logs">安 </a> » <i>Chame nosso adm a baixo !!</i>
 <a href="t.me/Kyo_logs">安 </a> » <i> @Im_karmah</i>
-<a href="t.me/Kyo_logs">安 </a> » <i> @Yakultzada</i>
+<a href="t.me/Kyo_logs">安 </a> » <i> @TODORIKOBINS</i>
 `;
         return caption;
     }

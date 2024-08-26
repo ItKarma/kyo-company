@@ -11,7 +11,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import axios from 'axios';
 import fetchDownloadLink from './utils/fetchDownloadLink.js'
-import { countUsersForUrl, countUsersByUsername, getResults, getAllResults, countTotalUsers } from './utils/fileSearch.js';
+import { countUsersForUrl, countUsersByUsername, getResults, getAllResults, countTotalUsers, getResultsUser } from './utils/fileSearch.js';
 import fss from 'fs/promises';
 import { InputFile } from "grammy";
 import chalk from "chalk";
@@ -23,7 +23,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 let coisasUrl = '';
-let recentUser = ''
+let recentUser = '';
+let emailRecent = '';
 
 bot.command("start", async (ctx) => {
   try {
@@ -182,7 +183,7 @@ bot.on('callback_query:data', async ctx => {
 <a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${userunBlock.balance}</b>
 <a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${userunBlock.subscription.plan}</b>
 <a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${userunBlock.subscription.status}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : false</b>`
+<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : ${userunBlock.bloq}</b>`
 
         return await ctx.editMessageText(caption, {
           reply_markup: {
@@ -219,7 +220,7 @@ bot.on('callback_query:data', async ctx => {
 <a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${userblock.balance}</b>
 <a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${userblock.subscription.plan}</b>
 <a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${userblock.subscription.status}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : true</b>`
+<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : </b>`
 
         return await ctx.editMessageText(caption, {
           reply_markup: {
@@ -235,7 +236,62 @@ bot.on('callback_query:data', async ctx => {
         console.log(error)
       }
 
-    }  else if (callbackData == 'pwd') {
+    }  else if (callbackData == 'buy_email') {
+
+      let user = ctx.callbackQuery.from;
+
+      try {
+        const User = await UserRepository.findUser(user.id);
+
+        if (!User) {
+          await ctx.reply("Você não tem registro em meu sistema, envie /start");
+          return;
+        }
+
+
+        const isExpired = User.isSubscriptionExpired();
+
+        if (User.balance == 0  && isExpired && User.subscription.plan.includes("Free")) {
+          let caption = await responseMessages.userNotbalance(user, coisasUrl);
+
+          await ctx.reply(caption, {
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: 'COMANDOS', callback_data: 'cmds' }],
+                [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+              ]
+            },
+            parse_mode: 'HTML'
+          });
+          return;
+        }
+
+
+
+
+        let result = await getResultsUser(emailRecent);
+
+        console.log(result)
+        if (!result) {
+          await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
+          return;
+        }
+
+
+        let caption = await responseMessages.pwd(user, result);
+
+
+        await changebalance(User, 0.50);
+
+        await ctx.editMessageText(caption, { parse_mode: "HTML" });
+
+      } catch (error) {
+        console.log(error);
+        await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR :</i> \n<code>${error}</code>`, {
+          parse_mode: "HTML"
+        });
+      }
+    } else if (callbackData == 'pwd') {
 
       let user = ctx.callbackQuery.from;
 
@@ -254,8 +310,7 @@ bot.on('callback_query:data', async ctx => {
 
         const isExpired = User.isSubscriptionExpired();
 
-        if (isExpired) {
-          console.log('A assinatura do usuário expirou.');
+        if (User.balance == 0  && isExpired && User.subscription.plan.includes("Free")) {
           let caption = await responseMessages.userNotbalance(user, coisasUrl);
 
           await ctx.reply(caption, {
@@ -270,20 +325,6 @@ bot.on('callback_query:data', async ctx => {
           return;
         }
 
-        if (User.balance == 0) {
-          let caption = await responseMessages.userNotbalance(user, coisasUrl);
-
-          await ctx.reply(caption, {
-            reply_markup: {
-              inline_keyboard: [
-                [{ text: 'COMANDOS', callback_data: 'cmds' }],
-                [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
-              ]
-            },
-            parse_mode: 'HTML'
-          });
-          return;
-        }
 
 
         let result = ''
@@ -786,11 +827,11 @@ bot.command("pwf", async (ctx) => {
   }
 });
 
-bot.command("pwd", async (ctx) => {
+bot.command("email", async (ctx) => {
   const emailSearch = ctx.match;
   const user = ctx.update.message.from;
 
-  const us1er = await UserRepository.findUser(id);
+  const us1er = await UserRepository.findUser(user.id);
 
   if (us1er.bloq) {
     return
@@ -798,7 +839,7 @@ bot.command("pwd", async (ctx) => {
 
   if (!emailSearch) {
     await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o email ou usuario, por favor use o comando seguido de um email ou usuario.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /pwd  Im_karmah@gmail.com</code>`, {
+<a href="t.me/Kyo_logs">↳ </a><code> /email  Im_karmah@gmail.com</code>`, {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
@@ -843,6 +884,8 @@ bot.command("pwd", async (ctx) => {
       return;
     }
 
+    emailRecent = emailSearch
+
     await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
 
     let caption1 = await responseMessages.email(user, result, emailSearch)
@@ -851,7 +894,7 @@ bot.command("pwd", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
-          { text: '[↯] PERFIL', callback_data: 'register' }
+          { text: '[↯] COMPRAR', callback_data: 'buy_email' }
           ],
         ]
       },
@@ -870,7 +913,7 @@ bot.command("cpf", async (ctx) => {
   const cpf = ctx.match;
   const user = ctx.update.message.from;
 
-  const us1er = await UserRepository.findUser(id);
+  const us1er = await UserRepository.findUser(user.id);
 
   if (us1er.bloq) {
     return

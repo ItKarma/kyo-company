@@ -36,6 +36,34 @@ async function getResults(url) {
 
 }
 
+const searchUser = (searchTerm) => {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM urls WHERE user LIKE ?', [`%${searchTerm}%`], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+};
+
+async function getResultsUser(url) {
+    try {
+        let results = await searchUser(url)
+        const randomResult = getRandomItem(results);
+        if (randomResult) {
+            return randomResult
+        }
+
+        return
+
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
 async function getAllResults(url) {
     try {
 
@@ -92,4 +120,4 @@ const countTotalUsers = () => {
 };
 
 
-export { countUsersForUrl, countUsersByUsername, getAllResults, getResults, countTotalUsers }
+export { countUsersForUrl, countUsersByUsername, getAllResults, getResults, countTotalUsers,getResultsUser }

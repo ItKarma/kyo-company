@@ -24,13 +24,12 @@ class responseMessages {
 
             let caption = `<a href="t.me/shotologs">安 </a> » <b>Olá ${user.first_name}</b>
 
-<a href="t.me/shotologs">↯ </a> » <b>Gostaria de realizar uma consulta?</b>
-
-<a href="t.me/shotologs">↳ </a> <b>Nome</b> :  <code> ${user.first_name}</code>
+<a href="t.me/shotologs">↳ </a> <b>Nome</b> : <code> ${user.first_name}</code>
 <a href="t.me/shotologs">↳ </a> <b>Saldo</b> :  <code> R$ ${user.balance.toFixed(2)}</code>
 <a href="t.me/shotologs">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
 <a href="t.me/shotologs">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
 
+<a href="t.me/shotologs">↯ </a> » <b>Gostaria de realizar uma consulta?</b>
 <a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
             return caption;
@@ -80,7 +79,7 @@ class responseMessages {
 
         let caption = `<a href="t.me/shotologs">安 </a> » <i>Opa amigão é nescessario ter creditos para desfrutar deste comando! favor realize uma recarga!</i>\n
 <a href="t.me/shotologs">安 </a> » <i>Chame algum de nossos adm a baixo !!</i>
-<a href="t.me/shotologs">安 </a> » <i> @TODORIKOBINS</i>
+<a href="t.me/shotologs">安 </a> » <i> @TODORIKOBINS </i>
 
 <a href="t.me/shotologs">↳ </a> <b>URL</b> : <code>${url}</code>
 <a href="t.me/shotologs">↳ </a><b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
@@ -95,7 +94,8 @@ class responseMessages {
 
     async pwd(userID, result) {
         let totalUsers = await countTotalUsers();
-        let formatTotal = formatNumber(totalUsers)
+        let formatTotal = formatNumber(totalUsers);
+        
         let user = await UserRepository.findUser(userID.id);
         if (!user) {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);

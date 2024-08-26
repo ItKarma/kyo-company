@@ -42,7 +42,7 @@ bot.command("start", async (ctx) => {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
           [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-          [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
+          [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' },
           { text: '[↯] AJUDA', callback_data: 'FAQ' }
           ],
         ]
@@ -111,7 +111,7 @@ bot.on('callback_query:data', async ctx => {
           inline_keyboard: [
             [
               { text: '[↯] VOLTAR', callback_data: 'start' },
-              { text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }
+              { text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }
 
             ],
             [{ text: '[↯] AJUDA', callback_data: 'FAQ' }],
@@ -128,7 +128,7 @@ bot.on('callback_query:data', async ctx => {
           inline_keyboard: [
             [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
             [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
+            [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' },
             { text: '[↯] AJUDA', callback_data: 'FAQ' }
             ],
           ]
@@ -143,7 +143,7 @@ bot.on('callback_query:data', async ctx => {
         reply_markup: {
           inline_keyboard: [
             [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+            [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
           ]
         },
         parse_mode: 'HTML'
@@ -156,7 +156,7 @@ bot.on('callback_query:data', async ctx => {
         reply_markup: {
           inline_keyboard: [
             [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+            [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
           ]
         },
         parse_mode: 'HTML'
@@ -188,7 +188,7 @@ bot.on('callback_query:data', async ctx => {
           reply_markup: {
             inline_keyboard: [
               [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-              [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+              [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
             ]
           },
           parse_mode: 'HTML'
@@ -225,7 +225,7 @@ bot.on('callback_query:data', async ctx => {
           reply_markup: {
             inline_keyboard: [
               [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-              [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+              [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
             ]
           },
           parse_mode: 'HTML'
@@ -262,7 +262,7 @@ bot.on('callback_query:data', async ctx => {
             reply_markup: {
               inline_keyboard: [
                 [{ text: 'COMANDOS', callback_data: 'cmds' }],
-                [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+                [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
               ]
             },
             parse_mode: 'HTML'
@@ -277,7 +277,7 @@ bot.on('callback_query:data', async ctx => {
             reply_markup: {
               inline_keyboard: [
                 [{ text: 'COMANDOS', callback_data: 'cmds' }],
-                [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+                [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
               ]
             },
             parse_mode: 'HTML'
@@ -405,7 +405,7 @@ bot.command("resgatar", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
-          [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+          [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
         ]
       },
       parse_mode: 'HTML'
@@ -495,7 +495,7 @@ bot.command("verificar", async (ctx) => {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
           ]
         },
         parse_mode: 'HTML'
@@ -576,7 +576,7 @@ bot.command("pw", async (ctx) => {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
           ]
         },
         parse_mode: 'HTML'
@@ -601,7 +601,7 @@ bot.command("pw", async (ctx) => {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
           ]
         },
         parse_mode: 'HTML'
@@ -691,7 +691,7 @@ bot.command("pwf", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
         ]
       },
       parse_mode: 'HTML'
@@ -705,7 +705,7 @@ bot.command("pwf", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
         ]
       },
       parse_mode: 'HTML'
@@ -733,7 +733,7 @@ bot.command("pwf", async (ctx) => {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
           ]
         },
         parse_mode: 'HTML'
@@ -802,7 +802,7 @@ bot.command("pwd", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
         ]
       },
       parse_mode: 'HTML'
@@ -882,7 +882,7 @@ bot.command("cpf", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
         ]
       },
       parse_mode: 'HTML'
@@ -1048,7 +1048,7 @@ bot.command('upload', async (ctx) => {
               inline_keyboard: [
                 [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
                 [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-                [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' },
+                [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' },
                 { text: '[↯] AJUDA', callback_data: 'FAQ' }],
               ]
             },

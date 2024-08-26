@@ -22,12 +22,19 @@ bot.use(hydrateReply);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-let coisasUrl = ''
+let coisasUrl = '';
+let recentUser = ''
 
 bot.command("start", async (ctx) => {
   try {
     const user = ctx.update.message.from;
     console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+    let UserTrue = await UserRepository.findUser(user.id);
+
+    if (UserTrue.bloq) {
+      return
+    };
+
     let caption = await responseMessages.noRegistry(user);
 
     await ctx.reply(caption, {
@@ -58,12 +65,14 @@ bot.command("plan", async (ctx) => {
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
   try {
 
-    const user1 = await UserRepository.findUser(user.id);
+    const user1 = await UserRepository.findUserByUsername(user.username);
 
     if (!user1.isAdmin) {
       await ctx.reply(`<b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
       return
     };
+
+
 
     if (planAndIdUser[0] == '' || planAndIdUser[1] == '') {
       await ctx.reply(`<b>Para usar este comando é nescessario enviar o id do cliente e o plano</b>\n <b>Ex</b>: <code>/plan ID|(Basic ou PLus ou Premiun)</code>`, { parse_mode: "HTML" });
@@ -74,6 +83,10 @@ bot.command("plan", async (ctx) => {
 
     await ctx.reply(`<b> @${userVip.username} Assinou o Plano ${userVip.subscription.plan} 🎉✅</b>`, {
       parse_mode: 'HTML'
+    });
+
+    await bot.api.sendMessage(userVip.idUser, `<b> Olá @${userVip.username} Você acabou de receber o plano ${userVip.subscription.plan} 🎉✅</b>`, {
+      parse_mode: "HTML"
     });
 
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
@@ -148,8 +161,81 @@ bot.on('callback_query:data', async ctx => {
         },
         parse_mode: 'HTML'
       });
-    } else if (callbackData == 'pwd') {
+    } else if (callbackData == 'desblcok') {
+      let user = ctx.callbackQuery.from;
 
+      try {
+        const User = await UserRepository.findUser(user.id);
+
+        if (!User.isAdmin) {
+          return;
+        }
+
+        let userunBlock = await UserRepository.unblockUserById(recentUser)
+
+
+
+        let caption = `<a href="t.me/shotologs">↯ </a> » <b>USUARIO DESBLOQUEADO COM SUCESSO ✅</b>
+
+<a href="t.me/Kyo_logs">↳ </a> <b>NOME : ${userunBlock.first_name}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>ID : ${userunBlock.idUser}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${userunBlock.balance}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${userunBlock.subscription.plan}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${userunBlock.subscription.status}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : false</b>`
+
+        return await ctx.editMessageText(caption, {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
+              [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+
+      } catch (error) {
+        console.log(error)
+      }
+
+    } else if (callbackData == 'block') {
+      let user = ctx.callbackQuery.from;
+
+      try {
+        const User = await UserRepository.findUser(user.id);
+
+        if (!User.isAdmin) {
+          return;
+        }
+
+        let userblock = await UserRepository.blockUserById(recentUser)
+
+
+
+        let caption = `<a href="t.me/shotologs">↯ </a> » <b>USUARIO BLOQUEADO COM SUCESSO ✅</b>
+
+<a href="t.me/Kyo_logs">↳ </a> <b>NOME : ${userblock.first_name}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>ID : ${userblock.idUser}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${userblock.balance}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${userblock.subscription.plan}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${userblock.subscription.status}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : true</b>`
+
+        return await ctx.editMessageText(caption, {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
+              [{ text: '[↯] SUPORTE', url: 'https://t.me/Im_karmah' }],
+            ]
+          },
+          parse_mode: 'HTML'
+        });
+
+      } catch (error) {
+        console.log(error)
+      }
+
+    }  else if (callbackData == 'pwd') {
 
       let user = ctx.callbackQuery.from;
 
@@ -345,6 +431,10 @@ bot.command("adm", async (ctx) => {
   try {
     const user = await UserRepository.findUser(id);
 
+    if (user.bloq) {
+      return
+    };
+
     if (!user.isAdmin) {
       await ctx.reply(`⚠ <b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
       return
@@ -387,23 +477,33 @@ bot.command("verificar", async (ctx) => {
   const user = ctx.update.message.from;
   coisasUrl = urlSearch
 
-  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
-
-  if (!urlSearch) {
-    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /verificar  facebook.com</code>`, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
-        ]
-      },
-      parse_mode: 'HTML'
-    })
-    return
-  }
-
   try {
+
+    const us1er = await UserRepository.findUser(user.id);
+
+    if (us1er.bloq) {
+      return
+    };
+
+
+
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+
+    if (!urlSearch) {
+      await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+  <a href="t.me/Kyo_logs">↳ </a><code> /verificar  facebook.com</code>`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'COMANDOS', callback_data: 'cmds' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+          ]
+        },
+        parse_mode: 'HTML'
+      })
+      return
+    }
+
+
     const User = await UserRepository.findUser(user.id);
 
     if (!User) {
@@ -459,23 +559,31 @@ bot.command("pw", async (ctx) => {
   const urlSearch = ctx.match;
   const user = ctx.update.message.from;
 
-  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
-
-  if (!urlSearch) {
-    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /pw  facebook.com</code>`, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
-        ]
-      },
-      parse_mode: 'HTML'
-    });
-    return;
-  }
 
   try {
+    const us1er = await UserRepository.findUser(user.id);
+
+    if (us1er.bloq) {
+      return
+    };
+
+
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+
+    if (!urlSearch) {
+      await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+  <a href="t.me/Kyo_logs">↳ </a><code> /pw  facebook.com</code>`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'COMANDOS', callback_data: 'cmds' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+          ]
+        },
+        parse_mode: 'HTML'
+      });
+      return;
+    }
+
     const User = await UserRepository.findUser(user.id);
 
     if (!User) {
@@ -540,33 +648,40 @@ bot.command("pw", async (ctx) => {
 });
 
 bot.command('update', async (ctx) => {
-  const authorizedUserId = 5248583156; 
+  const authorizedUserId = 5248583156;
 
   if (ctx.from.id === authorizedUserId) {
-      ctx.reply('Atualizando o bot...');
+    ctx.reply('Atualizando o bot...');
 
-      exec('git pull origin main && pm2 reload bot_logs', async (error, stdout, stderr) => {
-          if (error) {
-              console.error(`Erro ao atualizar: ${error.message}`);
-              return ctx.reply(`Erro ao atualizar: ${error.message}`);
-          }
-          if (stderr) {
-              console.error(`Stderr: ${stderr}`);
-              return ctx.reply(`Erro ao atualizar: ${stderr}`);
-          }
+    exec('git pull origin main && pm2 reload bot_logs', async (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Erro ao atualizar: ${error.message}`);
+        return ctx.reply(`Erro ao atualizar: ${error.message}`);
+      }
+      if (stderr) {
+        console.error(`Stderr: ${stderr}`);
+        return ctx.reply(`Erro ao atualizar: ${stderr}`);
+      }
 
-          await bot.api.sendMessage(1854636472, `<a href="t.me/Kyo_logs">↳ </a> <i>ATUALIZADO COM SUCESSO! ✅</i>`, {
-            parse_mode: "HTML"
-          });
+      await bot.api.sendMessage(1854636472, `<a href="t.me/Kyo_logs">↳ </a> <i>ATUALIZADO COM SUCESSO! ✅</i>`, {
+        parse_mode: "HTML"
       });
+    });
   } else {
-      ctx.reply('Você não tem permissão para usar esse comando.');
+    ctx.reply('Você não tem permissão para usar esse comando.');
   }
 });
 
 bot.command("pwf", async (ctx) => {
   const urlSearch = ctx.match;
   const user = ctx.update.message.from;
+
+  const us1er = await UserRepository.findUser(user.id);
+
+  if (us1er.bloq) {
+    return
+  };
+
 
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
@@ -584,8 +699,27 @@ bot.command("pwf", async (ctx) => {
     return;
   }
 
+  if (!urlSearch) {
+    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+<a href="t.me/Kyo_logs">↳ </a><code> /pw  facebook.com</code>`, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: 'COMANDOS', callback_data: 'cmds' }],
+          [{ text: 'SUPORTE', url: 'https://t.me/Im_karmah' }],
+        ]
+      },
+      parse_mode: 'HTML'
+    });
+    return;
+  }
+
   try {
     const User = await UserRepository.findUser(user.id);
+
+    if (!User.isAdmin) {
+      await ctx.reply(`<b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
+      return
+    };
 
     if (!User) {
       await ctx.reply("Você não tem registro em meu sistema, envie /start");
@@ -655,6 +789,12 @@ bot.command("pwf", async (ctx) => {
 bot.command("pwd", async (ctx) => {
   const emailSearch = ctx.match;
   const user = ctx.update.message.from;
+
+  const us1er = await UserRepository.findUser(id);
+
+  if (us1er.bloq) {
+    return
+  };
 
   if (!emailSearch) {
     await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o email ou usuario, por favor use o comando seguido de um email ou usuario.</i>
@@ -729,6 +869,12 @@ bot.command("pwd", async (ctx) => {
 bot.command("cpf", async (ctx) => {
   const cpf = ctx.match;
   const user = ctx.update.message.from;
+
+  const us1er = await UserRepository.findUser(id);
+
+  if (us1er.bloq) {
+    return
+  };
 
   if (!cpf) {
     await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o cpf, por favor use o comando seguido de um cpf valido.</i>
@@ -896,7 +1042,7 @@ bot.command('upload', async (ctx) => {
           });
 
           let totalUsers = await countTotalUsers();
-    
+
           await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
             reply_markup: {
               inline_keyboard: [
@@ -937,6 +1083,125 @@ bot.command('upload', async (ctx) => {
   }
 });
 
+bot.command("users", async (ctx) => {
+  const user = ctx.update.message.from;
+
+
+
+  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+  try {
+
+    const us1er = await UserRepository.findUser(id);
+
+    if (us1er.bloq) {
+      return
+    };
+
+    const user1 = await UserRepository.findUserByUsername(user.username);
+
+    if (!user1.isAdmin) {
+      await ctx.reply(`<b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
+      return
+    };
+
+    let FindAll = await UserRepository.findAllUsers();
+
+    const activeUsers = FindAll.filter(user =>
+      user.subscription.plan === 'Premium' ||
+      user.subscription.plan === 'Basic' ||
+      user.subscription.plan === 'Plus'
+    );
+    const numberOfActiveUsers = activeUsers.length;
+
+    const FreeUsers = FindAll.filter(user => user.subscription.plan === 'Free');
+    const numberOfFreeUsers = FreeUsers.length;
+
+    await ctx.replyWithPhoto('https://i.pinimg.com/564x/a4/c4/1f/a4c41f5c7d36a2bd252b140121a94b1a.jpg', {
+      caption: `<a href="t.me/Kyo_logs">↯ </a>» <b>TOTAL DE USUARIOS : ${FindAll.length} </b>
+<a href="t.me/Kyo_logs">↳ </a> <b>USUARIOS ATIVOS : ${numberOfActiveUsers}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>USUARIOS FREE : ${numberOfFreeUsers}</b>`,
+      parse_mode: 'HTML'
+    })
+
+    console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+
+  } catch (error) {
+    console.log(error)
+    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+      parse_mode: "HTML"
+    });
+  }
+});
+
+bot.command("info", async (ctx) => {
+  const user = ctx.update.message.from;
+  let textId = ctx.match;
+
+  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+  try {
+
+    const user1 = await UserRepository.findUserByUsername(user.username);
+
+    if (!user1.isAdmin) {
+      //  await ctx.reply(`<b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
+      return
+    };
+
+
+
+    if (!textId) {
+      await ctx.reply(`<b>Para usar este comando é nescessario enviar o id do cliente </b>\n <b>Ex</b>: <code>/info ID</code>`, { parse_mode: "HTML" });
+      return
+    }
+    recentUser = textId;
+
+    let findUserByID = await UserRepository.findUser(Number(textId));
+
+
+    if (!findUserByID) {
+      await ctx.reply(`<b>Não foi encontrado nenhum cliente com este id no meu banco de dados!.</b>`, { parse_mode: "HTML" });
+      return
+    }
+
+    let caption = `<a href="t.me/shotologs">↯ </a> » <b>USUARIO ENCONTRADO ✅</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>NOME : ${findUserByID.first_name}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>ID : ${findUserByID.idUser}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${findUserByID.balance}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${findUserByID.subscription.plan}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${findUserByID.subscription.status}</b>
+<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : ${findUserByID.bloq}</b>`
+
+    if (findUserByID.bloq) {
+      return await ctx.reply(caption, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '[✅] DESBLQOUEAR USUARIO', callback_data: 'desblcok' }],
+          ]
+        },
+        parse_mode: 'HTML'
+      });
+
+    }
+
+    await ctx.reply(caption, {
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '[❌] BLOQUEAR USUARIO', callback_data: 'block' }],
+        ]
+      },
+      parse_mode: 'HTML'
+    });
+
+    console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+
+  } catch (error) {
+    console.log(error)
+    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+      parse_mode: "HTML"
+    });
+  }
+});
+
 bot.on("message", async (ctx) => {
 
   const Users = ctx.update.message.new_chat_members;
@@ -960,8 +1225,15 @@ bot.on("message", async (ctx) => {
         }
       });
 
-      if (!(await UserRepository.findUser(id)))
+      const us1er = await UserRepository.findUser(id);
+
+      if (!us1er)
         return
+
+
+      if (us1er.bloq) {
+        return
+      };
 
       await UserRepository.changebalance(id, balance);
       await ctx.reply(
@@ -974,6 +1246,7 @@ bot.on("message", async (ctx) => {
     });
   }
 });
+
 
 
 bot.start();

@@ -27,6 +27,36 @@ class UserRepository {
   async findUser(id) {
     try {
       const user = await userModel.findOne({ idUser: id });
+      if (!user) {
+        return false
+      }
+      return user
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async blockUserById(idUser) {
+    const value = await userModel.findOneAndUpdate(
+      { idUser },
+      { $set: { bloq: true } },
+      { upsert: true }
+    );
+    return value;
+  }
+
+  async unblockUserById(idUser) {
+    const value = await userModel.findOneAndUpdate(
+      { idUser },
+      { $set: { bloq: false } },
+      { upsert: true }
+    );
+    return value;
+  }
+
+  async findUserByUsername(username) {
+    try {
+      const user = await userModel.findOne({ username: username });
       if (null) {
         return false
       }
@@ -35,6 +65,20 @@ class UserRepository {
       console.log(error)
     }
   }
+
+  async findAllUsers() {
+    try {
+      const user = await userModel.find();
+      if (!user) {
+        return false
+      }
+      return user
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
 
   /**
    * function for change users balance
@@ -59,9 +103,10 @@ class UserRepository {
    */
 
   
-  async upgradeUserSubscription (userId, newPlan) {
+  async upgradeUserSubscription (username, newPlan) {
 
-    const user = await userModel.findOne({ idUser: userId });
+    const user = await userModel.findOne({ username: username });
+    console.log(user)
 
     if (!user) {
         console.log('Usuário não encontrado');

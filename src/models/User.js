@@ -42,6 +42,10 @@ const UserModel = new Schema({
         type: Boolean,
         default: false
     },
+    bloq: {
+        type: Boolean,
+        default: false
+    },
     subscription: {
         type: SubscriptionSchema,
         default: {

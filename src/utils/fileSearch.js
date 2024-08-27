@@ -52,7 +52,7 @@ const searchUser = (searchTerm) => {
 async function getResultsUser(url) {
     try {
         let results = await searchUser(url);
-        return getRandomItem(results) || null;
+        return results
     } catch (error) {
         console.error(error);
     }
@@ -94,7 +94,7 @@ const countUsersByUsername = (username) => {
     });
 };
 
-// Função para contar total de usuários
+
 const countTotalUsers = () => {
     return new Promise((resolve, reject) => {
         db.get('SELECT COUNT(*) AS totalUsers FROM urls', (err, row) => {

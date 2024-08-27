@@ -13,28 +13,30 @@ import axios from 'axios';
 import fetchDownloadLink from './utils/fetchDownloadLink.js'
 import { countUsersForUrl, countUsersByUsername, getResults, getAllResults, countTotalUsers, getResultsUser } from './utils/fileSearch.js';
 import fss from 'fs/promises';
-import { InputFile } from "grammy";
+import { InputFile, session } from "grammy";
 import chalk from "chalk";
 import importAllFiles from "./utils/convertDb.js";
 import { exec } from 'child_process';
+import { FileAdapter } from '@grammyjs/storage-file'; 
+import checkUserPermission from "./utils/checkUserPermission.js";
+
+const fileStorage = new FileAdapter('./sessions');
+
 bot.use(hydrateReply);
+bot.use(session({ initial: () => ({ emailRecent: null }), storage: fileStorage }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 let coisasUrl = '';
 let recentUser = '';
-let emailRecent = '';
 
 bot.command("start", async (ctx) => {
   try {
     const user = ctx.update.message.from;
     console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
-    let UserTrue = await UserRepository.findUser(user.id);
 
-    if (UserTrue.bloq) {
-      return
-    };
+   await  checkUserPermission(user.id)
 
     let caption = await responseMessages.noRegistry(user);
 
@@ -265,25 +267,33 @@ bot.on('callback_query:data', async ctx => {
           });
           return;
         }
+        
 
 
+        if (!ctx.session.emailRecent) {
+          await ctx.reply('Nenhum email recente encontrado.');
+          return;
+        }
+  
+        let result = await getResultsUser(ctx.session.emailRecent);
 
-
-        let result = await getResultsUser(emailRecent);
-
-        console.log(result)
         if (!result) {
           await ctx.reply('Nenhum resultado encontrado para a URL fornecida.');
           return;
         }
 
-
-        let caption = await responseMessages.pwd(user, result);
-
-
         await changebalance(User, 0.50);
 
-        await ctx.editMessageText(caption, { parse_mode: "HTML" });
+
+        await fss.writeFile(`${ctx.session.emailRecent}.txt`, JSON.stringify(result, null, 2));
+
+        let filename = path.join(__dirname, `.././${ctx.session.emailRecent}.txt`);
+    
+        await ctx.replyWithDocument(new InputFile(filename), {
+          reply_parameters: { message_id: ctx.msg.message_id },
+        });
+    
+        await fss.unlink(filename);
 
       } catch (error) {
         console.log(error);
@@ -827,40 +837,35 @@ bot.command("pwf", async (ctx) => {
   }
 });
 
-bot.command("email", async (ctx) => {
+bot.command('email', async (ctx) => {
   const emailSearch = ctx.match;
-  const user = ctx.update.message.from;
-
-  const us1er = await UserRepository.findUser(user.id);
-
-  if (us1er.bloq) {
-    return
-  };
-
-  if (!emailSearch) {
-    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o email ou usuario, por favor use o comando seguido de um email ou usuario.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /email  Im_karmah@gmail.com</code>`, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
-        ]
-      },
-      parse_mode: 'HTML'
-    })
-    return
-  }
+  const user = ctx.from;
 
   try {
-    const User = await UserRepository.findUser(user.id);
+    const us1er = await UserRepository.findUser(user.id);
+    if (us1er.bloq) return;
 
-    if (!User) {
-      await ctx.reply("Você não  tem registro em meu sistema , envie /start");
-      return
+    if (!emailSearch) {
+      await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o email ou usuario, por favor use o comando seguido de um email ou usuario.</i>
+<a href="t.me/Kyo_logs">↳ </a><code> /email  Im_karmah@gmail.com</code>`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'COMANDOS', callback_data: 'cmds' }],
+            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+          ]
+        },
+        parse_mode: 'HTML'
+      });
+      return;
     }
 
-    await ctx.api.sendChatAction(ctx.update.message.chat.id, "typing");
+    const User = await UserRepository.findUser(user.id);
+    if (!User) {
+      await ctx.reply('Você não tem registro em meu sistema, envie /start');
+      return;
+    }
 
+    await ctx.api.sendChatAction(ctx.chat.id, "typing");
 
     let loadingMessage = await ctx.reply('Consultando... ⌛');
 
@@ -879,22 +884,22 @@ bot.command("email", async (ctx) => {
     clearInterval(interval);
 
     if (result === 0) {
-      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+      await ctx.api.deleteMessage(ctx.chat.id, loadingMessage.message_id);
       await ctx.reply('Nenhum resultado encontrado para o email ou usuario fornecido.');
       return;
     }
 
-    emailRecent = emailSearch
+    ctx.session.emailRecent = emailSearch;
 
-    await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+    await ctx.api.deleteMessage(ctx.chat.id, loadingMessage.message_id);
 
-    let caption1 = await responseMessages.email(user, result, emailSearch)
+    let caption1 = await responseMessages.email(user, result, emailSearch);
 
-    return await ctx.reply(caption1, {
+    await ctx.reply(caption1, {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
-          { text: '[↯] COMPRAR', callback_data: 'buy_email' }
+           { text: '[↯] COMPRAR', callback_data: 'buy_email' }
           ],
         ]
       },
@@ -902,7 +907,7 @@ bot.command("email", async (ctx) => {
     });
 
   } catch (error) {
-    console.log(error)
+    console.log(error);
     await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
       parse_mode: "HTML"
     });

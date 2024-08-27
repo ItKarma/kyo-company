@@ -50,7 +50,6 @@ function runQuery(query, params) {
     });
 }
 
-// Função para importar um arquivo para o banco de dados
 async function importFile(filePath) {
     const fileStream = fs.createReadStream(filePath);
     const rl = readline.createInterface({
@@ -58,10 +57,13 @@ async function importFile(filePath) {
         crlfDelay: Infinity
     });
 
-    const batchSize = 1000; // Número de linhas por lote
+    const batchSize = 10000; // Ajuste o tamanho do lote conforme necessário
     let batch = [];
     
-    await runQuery('BEGIN TRANSACTION'); // Inicia a transação
+    
+    await runQuery('PRAGMA synchronous = OFF');
+    await runQuery('PRAGMA journal_mode = WAL');
+    await runQuery('BEGIN TRANSACTION'); 
 
     try {
         for await (const line of rl) {
@@ -71,50 +73,48 @@ async function importFile(filePath) {
             if (line.includes("://")) {
                 [http, urlUserPass] = line.split("://");
             } else {
-                urlUserPass = line; // Se não tiver "://", 
+                urlUserPass = line; 
             }
             
             const [url, user, pass] = urlUserPass.split(':');
-          //  console.log(url, user, pass);
             batch.push([url, user, pass]);
-
 
             if (batch.length >= batchSize) {
                 const placeholders = batch.map(() => '(?, ?, ?)').join(', ');
                 const flatBatch = batch.flat();
                 await runQuery(`INSERT INTO urls (url, user, pass) VALUES ${placeholders}`, flatBatch);
-                batch = []; // Limpa o lote
+                batch = []; 
             }
         }
 
-        // Insere o restante do lote se houver
+        
         if (batch.length > 0) {
             const placeholders = batch.map(() => '(?, ?, ?)').join(', ');
             const flatBatch = batch.flat();
             await runQuery(`INSERT INTO urls (url, user, pass) VALUES ${placeholders}`, flatBatch);
         }
     } finally {
-        await runQuery('COMMIT'); // Comita a transação
+        await runQuery('COMMIT'); 
+        await runQuery('PRAGMA synchronous = FULL');
+        await runQuery('PRAGMA journal_mode = DELETE');
     }
 }
 
-
-
 async function deleteFile(filePath) {
-    return fs.promises.unlink(filePath); // Remove o arquivo
+    return fs.promises.unlink(filePath); 
 }
 
 async function importAllFiles() {
-    await openDatabase(); // Reabre o banco de dados
+    await openDatabase(); 
     const arquivos = await fs.promises.readdir(pastaDados);
     try {
         for (const arquivo of arquivos) {
             const filePath = path.join(pastaDados, arquivo);
             await importFile(filePath);
-            await deleteFile(filePath); // Exclui o arquivo após a importação
+            await deleteFile(filePath); 
         }
     } finally {
-        await closeDatabase(); // Garante que o banco de dados seja fechado após todas as operações
+        await closeDatabase(); 
     }
 }
 

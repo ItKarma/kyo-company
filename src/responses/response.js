@@ -40,7 +40,10 @@ class responseMessages {
     }
 
     cmds() {
-        let caption = `<a href="t.me/shotologs">↳ </a>  /cpf » <i>Faz uma busca dos dados de uma pessoa com o cpf </i>\n<a href="t.me/shotologs">↳ </a>  /pw » <i>Faz uma busca de login/senha pelo domínio/site </i>\n<a href="t.me/shotologs">↳ </a>  /verificar » <i>verifica se tem credenciais para sua url em nossa db</i>\n<a href="t.me/shotologs">↳ </a>  /pwd » <i>verifica se tem credenciais para um email ou usuario especifico em nossa db</i>`;
+        let caption = `<a href="t.me/shotologs">↳ </a>  /cpf » <b>Faz uma busca dos dados de uma pessoa com o cpf </b>\n
+<a href="t.me/shotologs">↳ </a>  /pw » <b>Faz uma busca de login/senha pelo domínio/site </b>\n
+<a href="t.me/shotologs">↳ </a>  /verificar » <b>verifica se tem credenciais para sua url em nossa db (Evite colocar o site com https:// ou www.) </b>\n
+<a href="t.me/shotologs">↳ </a>  /email » <b>verifica se tem credenciais para um email ou usuario especifico em nossa db</b>`;
         return caption
     }
 

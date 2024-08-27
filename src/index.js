@@ -23,7 +23,7 @@ import checkUserPermission from "./utils/checkUserPermission.js";
 const fileStorage = new FileAdapter('./sessions');
 
 bot.use(hydrateReply);
-bot.use(session({ initial: () => ({ emailRecent: null }), storage: fileStorage }));
+bot.use(session({ initial: () => ({ emailRecent: null , siteRecent: null}), storage: fileStorage }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -338,10 +338,10 @@ bot.on('callback_query:data', async ctx => {
 
 
         let result = ''
-        let url = coisasUrl;
+        let url = ctx.session.siteRecent
 
-        if (coisasUrl.startsWith("://")) {
-          url = coisasUrl.split("://");
+        if (ctx.session.siteRecent.startsWith("://")) {
+          url = ctx.session.siteRecent.split("://");
           result = await getResults(url[1]);
         } else {
           result = await getResults(url);
@@ -526,7 +526,7 @@ bot.command("adm", async (ctx) => {
 bot.command("verificar", async (ctx) => {
   const urlSearch = ctx.match;
   const user = ctx.update.message.from;
-  coisasUrl = urlSearch
+  ctx.session.siteRecent = urlSearch;
 
   try {
 

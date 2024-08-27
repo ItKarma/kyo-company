@@ -4,3 +4,5 @@ package-lock.json
 db_urls
 data.db
 sessions
+data.db-shm
+data.db-wal

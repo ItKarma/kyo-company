@@ -5,6 +5,43 @@ const db = new sqlite3.Database('data.db');
 db.run('CREATE INDEX IF NOT EXISTS idx_url ON urls(url)');
 db.run('CREATE INDEX IF NOT EXISTS idx_user ON urls(user)');
 
+// Função para buscar URLs em uma tabela específica com ordenação aleatória
+const searchUrlInTableRandom = (db, tableName, searchTerm, limit = 10) => {
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM ${tableName} WHERE url LIKE ? ORDER BY RANDOM() LIMIT ?`, [`%${searchTerm}%`, limit], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+};
+
+const searchUrlAlternatedRandom = async (searchTerm, limit = 10) => {
+    try {
+        const limitPerTable = Math.ceil(limit / 2);
+        
+        const [results1, results2] = await Promise.all([
+            searchUrlInTableRandom(db, 'urls_part1', searchTerm, limitPerTable),
+            searchUrlInTableRandom(db, 'urls_part2', searchTerm, limitPerTable)
+        ]);
+        
+        // Combina os resultados das duas tabelas e remove duplicatas
+        const combinedResults = [...results1, ...results2];
+        const uniqueResults = Array.from(new Set(combinedResults.map(item => item.id)))
+                                    .map(id => {
+                                        return combinedResults.find(item => item.id === id);
+                                    });
+        
+        // Limita o número total de resultados retornados
+        return uniqueResults.slice(0, limit);
+    } catch (err) {
+        console.error('Error:', err);
+        throw err;
+    }
+};
+
 
 const searchUrlRandom = (searchTerm, limit = 10) => {
     return new Promise((resolve, reject) => {
@@ -27,7 +64,7 @@ const getRandomItem = (array) => {
 
 async function getResults(url) {
     try {
-        let results = await searchUrlRandom(url);
+        let results = await searchUrlAlternatedRandom(url);
         return getRandomItem(results) || null;
     } catch (error) {
         console.error(error);
@@ -60,7 +97,7 @@ async function getResultsUser(url) {
 
 async function getAllResults(url) {
     try {
-        return await searchUrlRandom(url);
+        return await searchUrlAlternatedRandom(url);
     } catch (error) {
         console.error(error);
     }

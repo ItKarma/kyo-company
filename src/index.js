@@ -17,13 +17,13 @@ import { InputFile, session } from "grammy";
 import chalk from "chalk";
 import importAllFiles from "./utils/convertDb.js";
 import { exec } from 'child_process';
-import { FileAdapter } from '@grammyjs/storage-file'; 
+import { FileAdapter } from '@grammyjs/storage-file';
 import checkUserPermission from "./utils/checkUserPermission.js";
 
 const fileStorage = new FileAdapter('./sessions');
 
 bot.use(hydrateReply);
-bot.use(session({ initial: () => ({ emailRecent: null , siteRecent: null}), storage: fileStorage }));
+bot.use(session({ initial: () => ({ emailRecent: null, siteRecent: null }), storage: fileStorage }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,7 +36,7 @@ bot.command("start", async (ctx) => {
     const user = ctx.update.message.from;
     console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
-   await  checkUserPermission(user.id)
+    await checkUserPermission(user.id)
 
     let caption = await responseMessages.noRegistry(user);
 
@@ -238,7 +238,7 @@ bot.on('callback_query:data', async ctx => {
         console.log(error)
       }
 
-    }  else if (callbackData == 'buy_email') {
+    } else if (callbackData == 'buy_email') {
 
       let user = ctx.callbackQuery.from;
 
@@ -253,7 +253,7 @@ bot.on('callback_query:data', async ctx => {
 
         const isExpired = User.isSubscriptionExpired();
 
-        if (User.balance == 0  && isExpired && User.subscription.plan.includes("Free")) {
+        if (User.balance == 0 && isExpired && User.subscription.plan.includes("Free")) {
           let caption = await responseMessages.userNotbalance(user, coisasUrl);
 
           await ctx.reply(caption, {
@@ -267,14 +267,14 @@ bot.on('callback_query:data', async ctx => {
           });
           return;
         }
-        
+
 
 
         if (!ctx.session.emailRecent) {
           await ctx.reply('Nenhum email recente encontrado.');
           return;
         }
-  
+
         let result = await getResultsUser(ctx.session.emailRecent);
 
         if (!result) {
@@ -288,11 +288,11 @@ bot.on('callback_query:data', async ctx => {
         await fss.writeFile(`${ctx.session.emailRecent}.txt`, JSON.stringify(result, null, 2));
 
         let filename = path.join(__dirname, `.././${ctx.session.emailRecent}.txt`);
-    
+
         await ctx.replyWithDocument(new InputFile(filename), {
           reply_parameters: { message_id: ctx.msg.message_id },
         });
-    
+
         await fss.unlink(filename);
 
       } catch (error) {
@@ -320,7 +320,7 @@ bot.on('callback_query:data', async ctx => {
 
         const isExpired = User.isSubscriptionExpired();
 
-        if (User.balance == 0  && isExpired && User.subscription.plan.includes("Free")) {
+        if (User.balance == 0 && isExpired && User.subscription.plan.includes("Free")) {
           let caption = await responseMessages.userNotbalance(user, coisasUrl);
 
           await ctx.reply(caption, {
@@ -899,7 +899,7 @@ bot.command('email', async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
-           { text: '[↯] COMPRAR', callback_data: 'buy_email' }
+          { text: '[↯] COMPRAR', callback_data: 'buy_email' }
           ],
         ]
       },
@@ -1083,11 +1083,12 @@ bot.command('upload', async (ctx) => {
       fileStream.on('finish', async () => {
         try {
 
-          await importAllFiles();
+          await importAllFiles().then(async () => {
+            return await ctx.reply(`<i>UPLOAD REALIZADO COM SUCESSO! ✅</i>`, {
+              parse_mode: "HTML"
+            });
+          }).catch((err) => console.log(err));
 
-          await ctx.reply(`<i>UPLOAD REALIZADO COM SUCESSO! ✅</i>`, {
-            parse_mode: "HTML"
-          });
 
           let totalUsers = await countTotalUsers();
 
@@ -1104,6 +1105,7 @@ bot.command('upload', async (ctx) => {
           });
 
 
+          console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
 
         } catch (err) {
           console.error('Erro ao calcular o tamanho da pasta:', err);
@@ -1115,8 +1117,6 @@ bot.command('upload', async (ctx) => {
         console.error('Erro ao salvar o arquivo:', err);
         await ctx.reply('Erro ao salvar o arquivo');
       });
-
-      console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
 
     } else {
       await ctx.reply('Por favor, envie um link para um arquivo.');

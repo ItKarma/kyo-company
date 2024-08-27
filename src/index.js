@@ -794,7 +794,7 @@ bot.command("pwf", async (ctx) => {
       }
     }, 100);
 
-console.log(urlSearch)
+    console.log(urlSearch)
     let result = await getAllResults(urlSearch);
 
     clearInterval(interval);
@@ -1105,8 +1105,6 @@ bot.command('upload', async (ctx) => {
   }
 });
 
-
-
 bot.command("users", async (ctx) => {
   const user = ctx.update.message.from;
 
@@ -1146,6 +1144,55 @@ bot.command("users", async (ctx) => {
 <a href="${process.env.CHANNEL_LINK}">↳ </a> <b>USUARIOS FREE : ${numberOfFreeUsers}</b>`,
       parse_mode: 'HTML'
     })
+
+    console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+
+  } catch (error) {
+    console.log(error)
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+      parse_mode: "HTML"
+    });
+  }
+});
+
+bot.command("msg", async (ctx) => {
+  const user = ctx.update.message.from;
+  const textMessage = ctx.match;
+
+  console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+  try {
+
+    const us1er = await UserRepository.findUser(user.id);
+
+    if (us1er.bloq) {
+      return
+    };
+
+    if (!us1er.isAdmin) {
+
+      return
+    };
+
+    let FindAll = await UserRepository.findAllUsers();
+
+    FindAll.map(async (user, i) => {
+      // console.log(user.idUser);
+
+      try {
+        await bot.api.sendMessage(user.idUser, `<a href="${process.env.CHANNEL_LINK}">↯ </a> <b> Olá @${user.username} , ${textMessage}</b>`, {
+          parse_mode: "HTML"
+        });
+      } catch (error) {
+        console.log(error)
+        await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+          parse_mode: "HTML"
+        });
+      }
+    })
+
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↯ </a> <b> Tramissão realizada com sucesso !</b>`, {
+      parse_mode: "HTML"
+    });
 
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
 

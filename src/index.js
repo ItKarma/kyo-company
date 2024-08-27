@@ -1029,6 +1029,7 @@ bot.command('upload', async (ctx) => {
   let text = ctx.match;
   let { id, username } = ctx.update.message.from;
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${username}`));
+
   try {
     let user = await UserRepository.findUser(id);
 
@@ -1044,7 +1045,8 @@ bot.command('upload', async (ctx) => {
       const url = urlMatch[0];
 
       if (!url.includes('mediafire')) {
-        ctx.reply("Por favor subir arquivo no https://app.mediafire.com/myfiles, por hora so temos suporte para esse provedor de arquivos.")
+        await ctx.reply("Por favor subir arquivo no https://app.mediafire.com/myfiles, por hora só temos suporte para esse provedor de arquivos.");
+        return;
       }
 
       let linkMediaFire = await fetchDownloadLink(url);
@@ -1058,7 +1060,6 @@ bot.command('upload', async (ctx) => {
       });
 
       function gerarNomeArquivo() {
-
         const agora = new Date();
         const ano = agora.getFullYear();
         const mes = String(agora.getMonth() + 1).padStart(2, '0');
@@ -1066,50 +1067,36 @@ bot.command('upload', async (ctx) => {
         const hora = String(agora.getHours()).padStart(2, '0');
         const minuto = String(agora.getMinutes()).padStart(2, '0');
         const segundo = String(agora.getSeconds()).padStart(2, '0');
-
-        const dataHoraFormatada = `${ano}-${mes}-${dia}_${hora}-${minuto}-${segundo}`;
-        const nomeArquivo = `${dataHoraFormatada}.txt`;
-
-        return nomeArquivo;
+        return `file-${user.username}-${ano}-${mes}-${dia}_${hora}-${minuto}-${segundo}.txt`;
       }
 
-
       const nome = gerarNomeArquivo();
-
-      const fileStream = fs.createWriteStream(path.join(__dirname, 'db_urls', `file-${user.username}-${nome}`));
+      const filePath = path.join(__dirname, 'db_urls', nome);
+      const fileStream = fs.createWriteStream(filePath);
 
       response.data.pipe(fileStream);
 
       fileStream.on('finish', async () => {
         try {
-
-          await importAllFiles().then(async () => {
-            return await ctx.reply(`<i>UPLOAD REALIZADO COM SUCESSO! ✅</i>`, {
-              parse_mode: "HTML"
-            });
-          }).catch((err) => console.log(err));
-
-
+          console.log('Arquivo ja esta no local!')
+          await importAllFiles();
+          await ctx.reply(`<i>UPLOAD REALIZADO COM SUCESSO! ✅</i>`, { parse_mode: "HTML" });
           let totalUsers = await countTotalUsers();
-
-          await ctx.reply(`<i>UPLOAD DE USUARIOS REALIZADO COM SUCESSO !✅</i> \n <i> USUARIOS </i> : <code>${totalUsers}</code>`, {
+          await ctx.reply(`<i>UPLOAD DE USUÁRIOS REALIZADO COM SUCESSO! ✅</i> \n <i>USUÁRIOS</i>: <code>${totalUsers}</code>`, {
             reply_markup: {
               inline_keyboard: [
                 [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
                 [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-                [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` },
-                { text: '[↯] AJUDA', callback_data: 'FAQ' }],
+                [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }],
+                [{ text: '[↯] AJUDA', callback_data: 'FAQ' }],
               ]
             },
             parse_mode: 'HTML'
           });
-
-
-          console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
-
+          console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESS`));
         } catch (err) {
-          console.error('Erro ao calcular o tamanho da pasta:', err);
-          await ctx.reply('Erro ao processar o tamanho da pasta');
+          console.error('Erro ao processar o arquivo:', err);
+          await ctx.reply('Erro ao processar o arquivo');
         }
       });
 
@@ -1125,11 +1112,13 @@ bot.command('upload', async (ctx) => {
   } catch (err) {
     console.error('Erro ao processar o arquivo:', err);
     await ctx.reply('Erro ao processar o arquivo');
-    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${err.message}</code>`, {
       parse_mode: "HTML"
     });
   }
 });
+
+
 
 bot.command("users", async (ctx) => {
   const user = ctx.update.message.from;

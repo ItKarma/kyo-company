@@ -21,19 +21,19 @@ const searchUrlInTableRandom = (db, tableName, searchTerm, limit = 10) => {
 const searchUrlAlternatedRandom = async (searchTerm, limit = 10) => {
     try {
         const limitPerTable = Math.ceil(limit / 2);
-        
+
         const [results1, results2] = await Promise.all([
             searchUrlInTableRandom(db, 'urls_part1', searchTerm, limitPerTable),
             searchUrlInTableRandom(db, 'urls_part2', searchTerm, limitPerTable)
         ]);
-        
+
         // Combina os resultados das duas tabelas e remove duplicatas
         const combinedResults = [...results1, ...results2];
         const uniqueResults = Array.from(new Set(combinedResults.map(item => item.id)))
-                                    .map(id => {
-                                        return combinedResults.find(item => item.id === id);
-                                    });
-        
+            .map(id => {
+                return combinedResults.find(item => item.id === id);
+            });
+
         // Limita o número total de resultados retornados
         return uniqueResults.slice(0, limit);
     } catch (err) {
@@ -64,8 +64,9 @@ const getRandomItem = (array) => {
 
 async function getResults(url) {
     try {
-        let results = await searchUrlAlternatedRandom(url);
-        return getRandomItem(results) || null;
+        let results = await searchUrlRandom(url);
+
+        return getRandomItem(results || null)
     } catch (error) {
         console.error(error);
     }

@@ -22,15 +22,15 @@ class responseMessages {
 
             }
 
-            let caption = `<a href="t.me/shotologs">安 </a> » <b>Olá ${user.first_name}</b>
+            let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <b>Olá ${user.first_name}</b>
 
-<a href="t.me/shotologs">↳ </a> <b>Nome</b> : <code> ${user.first_name}</code>
-<a href="t.me/shotologs">↳ </a> <b>Saldo</b> :  <code> R$ ${user.balance.toFixed(2)}</code>
-<a href="t.me/shotologs">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
-<a href="t.me/shotologs">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Nome</b> : <code> ${user.first_name}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Saldo</b> :  <code> R$ ${user.balance.toFixed(2)}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
 
-<a href="t.me/shotologs">↯ </a> » <b>Gostaria de realizar uma consulta?</b>
-<a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+<a href="${process.env.CHANNEL_LINK}">↯ </a> » <b>Gostaria de realizar uma consulta?</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
             return caption;
 
@@ -40,10 +40,10 @@ class responseMessages {
     }
 
     cmds() {
-        let caption = `<a href="t.me/shotologs">↳ </a>  /cpf » <b>Faz uma busca dos dados de uma pessoa com o cpf </b>\n
-<a href="t.me/shotologs">↳ </a>  /pw » <b>Faz uma busca de login/senha pelo domínio/site </b>\n
-<a href="t.me/shotologs">↳ </a>  /verificar » <b>verifica se tem credenciais para sua url em nossa db (Evite colocar o site com https:// ou www.) </b>\n
-<a href="t.me/shotologs">↳ </a>  /email » <b>verifica se tem credenciais para um email ou usuario especifico em nossa db</b>`;
+        let caption = `<a href="${process.env.CHANNEL_LINK}">↳ </a>  /cpf » <b>Faz uma busca dos dados de uma pessoa com o cpf </b>\n
+<a href="${process.env.CHANNEL_LINK}">↳ </a>  /pw » <b>Faz uma busca de login/senha pelo domínio/site </b>\n
+<a href="${process.env.CHANNEL_LINK}">↳ </a>  /verificar » <b>verifica se tem credenciais para sua url em nossa db (Evite colocar o site com https:// ou www.) </b>\n
+<a href="${process.env.CHANNEL_LINK}">↳ </a>  /email » <b>verifica se tem credenciais para um email ou usuario especifico em nossa db</b>`;
         return caption
     }
 
@@ -59,15 +59,15 @@ class responseMessages {
             user
         }
 
-        let caption = `<a href="t.me/shotologs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
 
-<a href="t.me/shotologs">↳ </a> <b>URL</b> : <code>${url}</code>
-<a href="t.me/shotologs">↳ </a><b>QUANTIDADE DE LOGS</b> : <code>${result}</code>
-<a href="t.me/shotologs">↳ </a><b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
-<a href="t.me/shotologs">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
-<a href="t.me/shotologs">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>URL</b> : <code>${url}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><b>QUANTIDADE DE LOGS</b> : <code>${result}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
 
-<a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
@@ -80,16 +80,16 @@ class responseMessages {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
         }
 
-        let caption = `<a href="t.me/shotologs">安 </a> » <i>Opa amigão é nescessario ter creditos para desfrutar deste comando! favor realize uma recarga!</i>\n
-<a href="t.me/shotologs">安 </a> » <i>Chame algum de nossos adm a baixo !!</i>
-<a href="t.me/shotologs">安 </a> » <i> @TODORIKOBINS </i>
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Opa amigão é nescessario ter creditos para desfrutar deste comando! favor realize uma recarga!</i>\n
+<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Chame algum de nossos adm a baixo !!</i>
+<a href="${process.env.CHANNEL_LINK}">安 </a> » <i> @TODORIKOBINS </i>
 
-<a href="t.me/shotologs">↳ </a> <b>URL</b> : <code>${url}</code>
-<a href="t.me/shotologs">↳ </a><b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
-<a href="t.me/shotologs">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
-<a href="t.me/shotologs">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>URL</b> : <code>${url}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
 
-<a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 
 `;
         return caption;
@@ -104,17 +104,17 @@ class responseMessages {
             user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
         }
 
-        let caption = `<a href="t.me/shotologs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
 
-<a href="t.me/shotologs">↳ </a> <i>URL</i> : <code>${result.url}</code>
-<a href="t.me/shotologs">↳ </a> <i>USER</i> : <code>${result.user}</code>
-<a href="t.me/shotologs">↳ </a> <i>PASS</i> : <code>${result.pass}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>URL</i> : <code>${result.url}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>USER</i> : <code>${result.user}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>PASS</i> : <code>${result.pass}</code>
 
-<a href="t.me/shotologs">↳ </a> <i>SALDO</i> : <i>${user.balance.toFixed(2)}</i>
-<a href="t.me/shotologs">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
-<a href="t.me/shotologs">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>SALDO</i> : <i>${user.balance.toFixed(2)}</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
 
-<a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
@@ -128,16 +128,16 @@ class responseMessages {
             user
         }
 
-        let caption = `<a href="t.me/shotologs">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Consulta realizada com sucesso! ✅</i>
 
-<a href="t.me/shotologs">↳ </a> <b>USER</b> : <code>${email}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>USER</b> : <code>${email}</code>
 
-<a href="t.me/shotologs">↳ </a> <b>QUANTIDADE DE LOGS</b> : <code>${total}</code>
-<a href="t.me/shotologs">↳ </a> <b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
-<a href="t.me/shotologs">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
-<a href="t.me/shotologs">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>QUANTIDADE DE LOGS</b> : <code>${total}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>SALDO</b> : <code>${user.balance.toFixed(2)}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
 
-<a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
@@ -152,15 +152,15 @@ class responseMessages {
             user
         }
 
-        let caption = `<a href="t.me/shotologs">安 </a> » <i>⚠ PERGUNTAS FREQUENTES!</i>
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>⚠ PERGUNTAS FREQUENTES!</i>
 
-<a href="t.me/shotologs">↳ </a> <i>Sobre o Nosso Bot</i>\n<i>Oferecemos um serviço de consulta e para conseguir logins da plataforma que voce preferir! seguro e anônimo por meio de banco de dados privados!.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>Sobre o Nosso Bot</i>\n<i>Oferecemos um serviço de consulta e para conseguir logins da plataforma que voce preferir! seguro e anônimo por meio de banco de dados privados!.</i>
 
-<a href="t.me/shotologs">↳ </a> <i>Como Funciona?</i>\n<i>Aperte em comandos para saber mais!.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>Como Funciona?</i>\n<i>Aperte em comandos para saber mais!.</i>
 
-<a href="t.me/shotologs">↳ </a> <i>Termos de Uso</i> : <i>Ao usar o bot, você aceita nossos termos. Abusos podem levar a penalidades como bloqueio ou redução de saldo. Não nos responsablizamos por o uso  em atividades ilegais. Reembolsos só são possíveis se o bot tiver algum erro, é nescessario prints sem borrar nada, e não garantimos logins sem segurança, consulte a plataforma da qual voce deseja o login, não garantimos live!.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>Termos de Uso</i> : <i>Ao usar o bot, você aceita nossos termos. Abusos podem levar a penalidades como bloqueio ou redução de saldo. Não nos responsablizamos por o uso  em atividades ilegais. Reembolsos só são possíveis se o bot tiver algum erro, é nescessario prints sem borrar nada, e não garantimos logins sem segurança, consulte a plataforma da qual voce deseja o login, não garantimos live!.</i>
 
-<a href="t.me/shotologs">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>LOGINS</b>: <code>${formatTotal}</code>
 `;
         return caption;
     }
@@ -173,10 +173,10 @@ class responseMessages {
             user
         }
 
-        let caption = `<a href="t.me/shotologs">安 </a> » <i>Olá ${userID.first_name}, nescessita realizar uma recarga?</i>
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Olá ${userID.first_name}, nescessita realizar uma recarga?</i>
 
-<a href="t.me/shotologs">安 </a> » <i>Chame nosso adm a baixo !!</i>
-<a href="t.me/shotologs">安 </a> » <i> @TODORIKOBINS</i>
+<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Chame nosso adm a baixo !!</i>
+<a href="${process.env.CHANNEL_LINK}">安 </a> » <i> @${process.env.OWNER_USER}</i>
 `;
         return caption;
     }

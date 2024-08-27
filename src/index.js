@@ -45,7 +45,7 @@ bot.command("start", async (ctx) => {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
           [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-          [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' },
+          [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` },
           { text: '[↯] AJUDA', callback_data: 'FAQ' }
           ],
         ]
@@ -55,7 +55,7 @@ bot.command("start", async (ctx) => {
 
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: start</i>\n<i>ERROR</i>\n<code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: start</i>\n<i>ERROR</i>\n<code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -96,7 +96,7 @@ bot.command("plan", async (ctx) => {
 
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -114,7 +114,7 @@ bot.on('callback_query:data', async ctx => {
           inline_keyboard: [
             [
               { text: '[↯] VOLTAR', callback_data: 'start' },
-              { text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }
+              { text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }
 
             ],
             [{ text: '[↯] AJUDA', callback_data: 'FAQ' }],
@@ -131,7 +131,7 @@ bot.on('callback_query:data', async ctx => {
           inline_keyboard: [
             [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
             [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' },
+            [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` },
             { text: '[↯] AJUDA', callback_data: 'FAQ' }
             ],
           ]
@@ -146,7 +146,7 @@ bot.on('callback_query:data', async ctx => {
         reply_markup: {
           inline_keyboard: [
             [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -159,7 +159,7 @@ bot.on('callback_query:data', async ctx => {
         reply_markup: {
           inline_keyboard: [
             [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-            [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -180,18 +180,18 @@ bot.on('callback_query:data', async ctx => {
 
         let caption = `<a href="t.me/shotologs">↯ </a> » <b>USUARIO DESBLOQUEADO COM SUCESSO ✅</b>
 
-<a href="t.me/Kyo_logs">↳ </a> <b>NOME : ${userunBlock.first_name}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>ID : ${userunBlock.idUser}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${userunBlock.balance}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${userunBlock.subscription.plan}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${userunBlock.subscription.status}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : ${userunBlock.bloq}</b>`
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>NOME : ${userunBlock.first_name}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>ID : ${userunBlock.idUser}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>SALDO : ${userunBlock.balance}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>PLANO : ${userunBlock.subscription.plan}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>STATUS : ${userunBlock.subscription.status}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Bloqueado : ${userunBlock.bloq}</b>`
 
         return await ctx.editMessageText(caption, {
           reply_markup: {
             inline_keyboard: [
               [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-              [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+              [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }],
             ]
           },
           parse_mode: 'HTML'
@@ -217,18 +217,18 @@ bot.on('callback_query:data', async ctx => {
 
         let caption = `<a href="t.me/shotologs">↯ </a> » <b>USUARIO BLOQUEADO COM SUCESSO ✅</b>
 
-<a href="t.me/Kyo_logs">↳ </a> <b>NOME : ${userblock.first_name}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>ID : ${userblock.idUser}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${userblock.balance}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${userblock.subscription.plan}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${userblock.subscription.status}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : </b>`
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>NOME : ${userblock.first_name}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>ID : ${userblock.idUser}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>SALDO : ${userblock.balance}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>PLANO : ${userblock.subscription.plan}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>STATUS : ${userblock.subscription.status}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Bloqueado : </b>`
 
         return await ctx.editMessageText(caption, {
           reply_markup: {
             inline_keyboard: [
               [{ text: '[↯] COMANDOS', callback_data: 'cmds' },],
-              [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+              [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }],
             ]
           },
           parse_mode: 'HTML'
@@ -260,7 +260,7 @@ bot.on('callback_query:data', async ctx => {
             reply_markup: {
               inline_keyboard: [
                 [{ text: 'COMANDOS', callback_data: 'cmds' }],
-                [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+                [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
               ]
             },
             parse_mode: 'HTML'
@@ -297,7 +297,7 @@ bot.on('callback_query:data', async ctx => {
 
       } catch (error) {
         console.log(error);
-        await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR :</i> \n<code>${error}</code>`, {
+        await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR :</i> \n<code>${error}</code>`, {
           parse_mode: "HTML"
         });
       }
@@ -327,7 +327,7 @@ bot.on('callback_query:data', async ctx => {
             reply_markup: {
               inline_keyboard: [
                 [{ text: 'COMANDOS', callback_data: 'cmds' }],
-                [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+                [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
               ]
             },
             parse_mode: 'HTML'
@@ -339,12 +339,14 @@ bot.on('callback_query:data', async ctx => {
 
         let result = ''
         let url = ctx.session.siteRecent
+        console.log(url)
 
         if (ctx.session.siteRecent.startsWith("://")) {
           url = ctx.session.siteRecent.split("://");
           result = await getResults(url[1]);
         } else {
           result = await getResults(url);
+          console.log(result)
         }
 
         if (!result) {
@@ -362,7 +364,7 @@ bot.on('callback_query:data', async ctx => {
 
       } catch (error) {
         console.log(error);
-        await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR :</i> \n<code>${error}</code>`, {
+        await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR :</i> \n<code>${error}</code>`, {
           parse_mode: "HTML"
         });
       }
@@ -370,7 +372,7 @@ bot.on('callback_query:data', async ctx => {
 
   } catch (error) {
     console.log(error);
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: CALLBACK-DATA</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: CALLBACK-DATA</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -399,7 +401,7 @@ bot.command("gift", async (ctx) => {
 
     let createdGift = await createGift(amount, user._id);
 
-    await ctx.reply(`<a href="t.me/Kyo_logs">↳ </a> <b>GIFT GERADO COM SUCESSO VALOR R$ ${createdGift.creditAmount}!!</b> \n<a href="t.me/Kyo_logs">↳ </a><code>/resgatar ${createdGift.code}</code>`, {
+    await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>GIFT GERADO COM SUCESSO VALOR R$ ${createdGift.creditAmount}!!</b> \n<a href="${process.env.CHANNEL_LINK}">↳ </a><code>/resgatar ${createdGift.code}</code>`, {
       parse_mode: "HTML"
     });
 
@@ -407,7 +409,7 @@ bot.command("gift", async (ctx) => {
 
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i>\n<i>COMANDO: GIFT</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i>\n<i>COMANDO: GIFT</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -442,7 +444,7 @@ bot.command("resgatar", async (ctx) => {
 
     let UpdateAmountBalance = user.balance + userRedeemBy.creditAmount;
 
-    let caption = `<a href="t.me/Kyo_logs">↳ </a> <i>GIFT FOI RESGATADO COM SUCESSO💸🎉 </i>\n <i>VALOR: </i><code>${userRedeemBy.creditAmount}</code>`
+    let caption = `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>GIFT FOI RESGATADO COM SUCESSO💸🎉 </i>\n <i>VALOR: </i><code>${userRedeemBy.creditAmount}</code>`
 
     let Messageresponse = await ctx.reply(caption, {
       parse_mode: "HTML"
@@ -456,7 +458,7 @@ bot.command("resgatar", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
-          [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+          [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` }],
         ]
       },
       parse_mode: 'HTML'
@@ -465,7 +467,7 @@ bot.command("resgatar", async (ctx) => {
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${userctx.username} <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${userctx.username} <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -517,7 +519,7 @@ bot.command("adm", async (ctx) => {
 
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -541,12 +543,12 @@ bot.command("verificar", async (ctx) => {
     console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
     if (!urlSearch) {
-      await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-  <a href="t.me/Kyo_logs">↳ </a><code> /verificar  facebook.com</code>`, {
+      await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+  <a href="${process.env.CHANNEL_LINK}">↳ </a><code> /verificar  facebook.com</code>`, {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -589,7 +591,6 @@ bot.command("verificar", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
-          { text: '[↯] PERFIL', callback_data: 'register' }
           ],
           [{ text: '[↯] COMPRAR LOGIN', callback_data: 'pwd' },
           ],
@@ -600,7 +601,7 @@ bot.command("verificar", async (ctx) => {
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: VERIFICAR</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: VERIFICAR</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -622,12 +623,12 @@ bot.command("pw", async (ctx) => {
     console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
     if (!urlSearch) {
-      await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-  <a href="t.me/Kyo_logs">↳ </a><code> /pw  facebook.com</code>`, {
+      await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+  <a href="${process.env.CHANNEL_LINK}">↳ </a><code> /pw  facebook.com</code>`, {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -652,7 +653,7 @@ bot.command("pw", async (ctx) => {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -692,7 +693,7 @@ bot.command("pw", async (ctx) => {
 
   } catch (error) {
     console.log(error);
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR</i>:\n<code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR</i>:\n<code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -714,7 +715,7 @@ bot.command('update', async (ctx) => {
         return ctx.reply(`Erro ao atualizar: ${stderr}`);
       }
 
-      await bot.api.sendMessage(1854636472, `<a href="t.me/Kyo_logs">↳ </a> <i>ATUALIZADO COM SUCESSO! ✅</i>`, {
+      await bot.api.sendMessage(1854636472, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ATUALIZADO COM SUCESSO! ✅</i>`, {
         parse_mode: "HTML"
       });
     });
@@ -737,12 +738,12 @@ bot.command("pwf", async (ctx) => {
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
   if (!urlSearch) {
-    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /pw  facebook.com</code>`, {
+    await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /pw  facebook.com</code>`, {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+          [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
         ]
       },
       parse_mode: 'HTML'
@@ -751,12 +752,12 @@ bot.command("pwf", async (ctx) => {
   }
 
   if (!urlSearch) {
-    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /pw  facebook.com</code>`, {
+    await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /pw  facebook.com</code>`, {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+          [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
         ]
       },
       parse_mode: 'HTML'
@@ -784,7 +785,7 @@ bot.command("pwf", async (ctx) => {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -831,7 +832,7 @@ bot.command("pwf", async (ctx) => {
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
     console.log(error);
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -846,12 +847,12 @@ bot.command('email', async (ctx) => {
     if (us1er.bloq) return;
 
     if (!emailSearch) {
-      await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o email ou usuario, por favor use o comando seguido de um email ou usuario.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /email  Im_karmah@gmail.com</code>`, {
+      await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi o email ou usuario, por favor use o comando seguido de um email ou usuario.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /email  Im_karmah@gmail.com</code>`, {
         reply_markup: {
           inline_keyboard: [
             [{ text: 'COMANDOS', callback_data: 'cmds' }],
-            [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
           ]
         },
         parse_mode: 'HTML'
@@ -908,7 +909,7 @@ bot.command('email', async (ctx) => {
 
   } catch (error) {
     console.log(error);
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -925,12 +926,12 @@ bot.command("cpf", async (ctx) => {
   };
 
   if (!cpf) {
-    await ctx.reply(`<a href="t.me/Kyo_logs">↯ </a> » <i>Não recebi o cpf, por favor use o comando seguido de um cpf valido.</i>
-<a href="t.me/Kyo_logs">↳ </a><code> /cpf  cpf</code>`, {
+    await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi o cpf, por favor use o comando seguido de um cpf valido.</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /cpf  cpf</code>`, {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: 'https://t.me/TODORIKOBINS' }],
+          [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
         ]
       },
       parse_mode: 'HTML'
@@ -1010,7 +1011,6 @@ bot.command("cpf", async (ctx) => {
       reply_markup: {
         inline_keyboard: [
           [{ text: '[↯] COMANDOS', callback_data: 'cmds' },
-          { text: '[↯] PERFIL', callback_data: 'register' }
           ],
         ]
       },
@@ -1019,7 +1019,7 @@ bot.command("cpf", async (ctx) => {
 
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username} <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -1097,7 +1097,7 @@ bot.command('upload', async (ctx) => {
               inline_keyboard: [
                 [{ text: '[↯] COMANDOS', callback_data: 'cmds' }],
                 [{ text: '[↯] RECARREGAR', callback_data: 'req' }],
-                [{ text: '[↯] SUPORTE', url: 'https://t.me/TODORIKOBINS' },
+                [{ text: '[↯] SUPORTE', url: `${process.env.LINK_SUPORT}` },
                 { text: '[↯] AJUDA', callback_data: 'FAQ' }],
               ]
             },
@@ -1125,7 +1125,7 @@ bot.command('upload', async (ctx) => {
   } catch (err) {
     console.error('Erro ao processar o arquivo:', err);
     await ctx.reply('Erro ao processar o arquivo');
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -1165,9 +1165,9 @@ bot.command("users", async (ctx) => {
     const numberOfFreeUsers = FreeUsers.length;
 
     await ctx.replyWithPhoto('https://i.pinimg.com/564x/a4/c4/1f/a4c41f5c7d36a2bd252b140121a94b1a.jpg', {
-      caption: `<a href="t.me/Kyo_logs">↯ </a>» <b>TOTAL DE USUARIOS : ${FindAll.length} </b>
-<a href="t.me/Kyo_logs">↳ </a> <b>USUARIOS ATIVOS : ${numberOfActiveUsers}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>USUARIOS FREE : ${numberOfFreeUsers}</b>`,
+      caption: `<a href="${process.env.CHANNEL_LINK}">↯ </a>» <b>TOTAL DE USUARIOS : ${FindAll.length} </b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>USUARIOS ATIVOS : ${numberOfActiveUsers}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>USUARIOS FREE : ${numberOfFreeUsers}</b>`,
       parse_mode: 'HTML'
     })
 
@@ -1175,7 +1175,7 @@ bot.command("users", async (ctx) => {
 
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -1212,12 +1212,12 @@ bot.command("info", async (ctx) => {
     }
 
     let caption = `<a href="t.me/shotologs">↯ </a> » <b>USUARIO ENCONTRADO ✅</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>NOME : ${findUserByID.first_name}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>ID : ${findUserByID.idUser}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>SALDO : ${findUserByID.balance}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>PLANO : ${findUserByID.subscription.plan}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>STATUS : ${findUserByID.subscription.status}</b>
-<a href="t.me/Kyo_logs">↳ </a> <b>Bloqueado : ${findUserByID.bloq}</b>`
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>NOME : ${findUserByID.first_name}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>ID : ${findUserByID.idUser}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>SALDO : ${findUserByID.balance}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>PLANO : ${findUserByID.subscription.plan}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>STATUS : ${findUserByID.subscription.status}</b>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Bloqueado : ${findUserByID.bloq}</b>`
 
     if (findUserByID.bloq) {
       return await ctx.reply(caption, {
@@ -1244,7 +1244,7 @@ bot.command("info", async (ctx) => {
 
   } catch (error) {
     console.log(error)
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }
@@ -1289,7 +1289,7 @@ bot.on("message", async (ctx) => {
       );
     }
   } catch (error) {
-    await bot.api.sendMessage(5248583156, `<a href="t.me/Kyo_logs">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${username}</i> <code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }

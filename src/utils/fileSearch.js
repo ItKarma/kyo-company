@@ -6,9 +6,9 @@ db.run('CREATE INDEX IF NOT EXISTS idx_url ON urls(url)');
 db.run('CREATE INDEX IF NOT EXISTS idx_user ON urls(user)');
 
 
-const searchUrlPaginated = (searchTerm, limit = 10, offset = 0) => {
+const searchUrlRandom = (searchTerm, limit = 10) => {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM urls WHERE url LIKE ? LIMIT ? OFFSET ?', [`%${searchTerm}%`, limit, offset], (err, rows) => {
+        db.all('SELECT * FROM urls WHERE url LIKE ? ORDER BY RANDOM() LIMIT ?', [`%${searchTerm}%`, limit], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -17,7 +17,6 @@ const searchUrlPaginated = (searchTerm, limit = 10, offset = 0) => {
         });
     });
 };
-
 
 const getRandomItem = (array) => {
     if (array.length === 0) return null;
@@ -28,7 +27,7 @@ const getRandomItem = (array) => {
 
 async function getResults(url) {
     try {
-        let results = await searchUrlPaginated(url);
+        let results = await searchUrlRandom(url);
         return getRandomItem(results) || null;
     } catch (error) {
         console.error(error);
@@ -61,7 +60,7 @@ async function getResultsUser(url) {
 
 async function getAllResults(url) {
     try {
-        return await searchUrlPaginated(url);
+        return await searchUrlRandom(url);
     } catch (error) {
         console.error(error);
     }

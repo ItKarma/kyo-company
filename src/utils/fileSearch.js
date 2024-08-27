@@ -41,6 +41,10 @@ const searchUrlInTableRandom = (tableName, searchTerm, limit = 10) => {
     return db.all(`SELECT * FROM ${tableName} WHERE url LIKE ? ORDER BY RANDOM() LIMIT ?`, [`%${searchTerm}%`, limit]);
 };
 
+const searchUrlUnlimite = (tableName, searchTerm ) => {
+    return db.all(`SELECT * FROM ${tableName} WHERE url LIKE ? ORDER BY RANDOM() `, [`%${searchTerm}%`]);
+};
+
 // Função para buscar URLs em duas tabelas alternadamente com ordenação aleatória
 const searchUrlAlternatedRandom = async (searchTerm, limit = 10) => {
     try {
@@ -104,7 +108,7 @@ const getResultsUser = async (url) => {
 // Função para obter todos os resultados de URL
 const getAllResults = async (url) => {
     try {
-        return await searchUrlAlternatedRandom(url);
+        return await searchUrlUnlimite('urls',url);
     } catch (error) {
         console.error(error);
     }

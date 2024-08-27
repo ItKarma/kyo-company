@@ -734,26 +734,17 @@ bot.command("pwf", async (ctx) => {
     return
   };
 
+  if (!us1er.isAdmin) {
+    return
+  };
+
+
 
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
 
   if (!urlSearch) {
     await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /pw  facebook.com</code>`, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'COMANDOS', callback_data: 'cmds' }],
-          [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
-        ]
-      },
-      parse_mode: 'HTML'
-    });
-    return;
-  }
-
-  if (!urlSearch) {
-    await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua url, por favor use o comando seguido de uma url.</i>
-<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /pw  facebook.com</code>`, {
+<a href="${process.env.CHANNEL_LINK}">↳ </a><code> /pwf  facebook.com</code>`, {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'COMANDOS', callback_data: 'cmds' }],
@@ -767,11 +758,6 @@ bot.command("pwf", async (ctx) => {
 
   try {
     const User = await UserRepository.findUser(user.id);
-
-    if (!User.isAdmin) {
-      await ctx.reply(`<b>Para usar este comando é nescessario ser administrador ou dono</b> `, { parse_mode: "HTML" });
-      return
-    };
 
     if (!User) {
       await ctx.reply("Você não tem registro em meu sistema, envie /start");
@@ -808,6 +794,7 @@ bot.command("pwf", async (ctx) => {
       }
     }, 100);
 
+console.log(urlSearch)
     let result = await getAllResults(urlSearch);
 
     clearInterval(interval);
@@ -1128,7 +1115,7 @@ bot.command("users", async (ctx) => {
   console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
   try {
 
-    const us1er = await UserRepository.findUser(id);
+    const us1er = await UserRepository.findUser(user.id);
 
     if (us1er.bloq) {
       return

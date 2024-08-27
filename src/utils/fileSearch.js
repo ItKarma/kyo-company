@@ -1,10 +1,14 @@
 import sqlite3 from 'sqlite3';
-
 const db = new sqlite3.Database('data.db');
 
-const searchUrl = (searchTerm) => {
+
+db.run('CREATE INDEX IF NOT EXISTS idx_url ON urls(url)');
+db.run('CREATE INDEX IF NOT EXISTS idx_user ON urls(user)');
+
+
+const searchUrlPaginated = (searchTerm, limit = 10, offset = 0) => {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, rows) => {
+        db.all('SELECT * FROM urls WHERE url LIKE ? LIMIT ? OFFSET ?', [`%${searchTerm}%`, limit, offset], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -13,6 +17,7 @@ const searchUrl = (searchTerm) => {
         });
     });
 };
+
 
 const getRandomItem = (array) => {
     if (array.length === 0) return null;
@@ -20,25 +25,20 @@ const getRandomItem = (array) => {
     return array[randomIndex];
 };
 
+
 async function getResults(url) {
     try {
-        let results = await searchUrl(url)
-        const randomResult = getRandomItem(results);
-        if (randomResult) {
-            return randomResult
-        }
-
-        return
-
+        let results = await searchUrlPaginated(url);
+        return getRandomItem(results) || null;
     } catch (error) {
-        console.log(error)
+        console.error(error);
     }
-
 }
+
 
 const searchUser = (searchTerm) => {
     return new Promise((resolve, reject) => {
-        db.all('SELECT * FROM urls WHERE user LIKE ?', [`%${searchTerm}%`], (err, rows) => {
+        db.all('SELECT * FROM urls WHERE user LIKE ? LIMIT 1000', [`%${searchTerm}%`], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -48,46 +48,33 @@ const searchUser = (searchTerm) => {
     });
 };
 
+
 async function getResultsUser(url) {
     try {
-        let results = await searchUser(url)
-        const randomResult = getRandomItem(results);
-        if (randomResult) {
-            return randomResult
-        }
-
-        return
-
+        let results = await searchUser(url);
+        return getRandomItem(results) || null;
     } catch (error) {
-        console.log(error)
+        console.error(error);
     }
-
 }
+
 
 async function getAllResults(url) {
     try {
-
-        let results = await searchUrl(url)
-        if (results) {
-            return results
-        }
-
-        return
+        return await searchUrlPaginated(url);
     } catch (error) {
-        console.log(error)
+        console.error(error);
     }
-
 }
+
 
 const countUsersForUrl = (searchTerm) => {
     return new Promise((resolve, reject) => {
-        console.log('Searching for:', searchTerm); // Verifique o valor de searchTerm
         db.get('SELECT COUNT(*) AS userCount FROM urls WHERE url LIKE ?', [`%${searchTerm}%`], (err, row) => {
             if (err) {
                 console.error('Query Error:', err);
                 reject(err);
             } else {
-               // console.log('Query Result:', row); // Verifique o resultado da consulta
                 resolve(row.userCount);
             }
         });
@@ -107,6 +94,7 @@ const countUsersByUsername = (username) => {
     });
 };
 
+// Função para contar total de usuários
 const countTotalUsers = () => {
     return new Promise((resolve, reject) => {
         db.get('SELECT COUNT(*) AS totalUsers FROM urls', (err, row) => {
@@ -119,5 +107,4 @@ const countTotalUsers = () => {
     });
 };
 
-
-export { countUsersForUrl, countUsersByUsername, getAllResults, getResults, countTotalUsers,getResultsUser }
+export { countUsersForUrl, countUsersByUsername, getAllResults, getResults, countTotalUsers, getResultsUser };

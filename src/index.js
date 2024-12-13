@@ -19,6 +19,7 @@ import importAllFiles from "./utils/convertDb.js";
 import { exec } from 'child_process';
 import { FileAdapter } from '@grammyjs/storage-file';
 import checkUserPermission from "./utils/checkUserPermission.js";
+import { validCc } from "./utils/validador_cc.js";
 
 const fileStorage = new FileAdapter('./sessions');
 
@@ -55,6 +56,7 @@ bot.command("start", async (ctx) => {
 
     console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
   } catch (error) {
+    console.log(error)
     await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO </i>\n<i>COMANDO: start</i>\n<i>ERROR</i>\n<code>${error}</code>`, {
       parse_mode: "HTML"
     });
@@ -1268,6 +1270,98 @@ bot.command("info", async (ctx) => {
   } catch (error) {
     console.log(error)
     await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: start</i>\n<i>ERROR</i><code>${error}</code>`, {
+      parse_mode: "HTML"
+    });
+  }
+});
+
+bot.command("chk", async (ctx) => {
+  const gg = ctx.match;
+  const user = ctx.update.message.from;
+
+
+  try {
+    const us1er = await UserRepository.findUser(user.id);
+
+    if (us1er.bloq) {
+      return
+    };
+
+
+    console.log(chalk.green(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username}`));
+
+    if (!gg) {
+      await ctx.reply(`<a href="${process.env.CHANNEL_LINK}">↯ </a> » <i>Não recebi sua gg, por favor use o comando seguido de uma gg.</i>
+  <a href="${process.env.CHANNEL_LINK}">↳ </a><code> /chk  4891670055815116|04|2027|030</code>`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'COMANDOS', callback_data: 'cmds' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
+          ]
+        },
+        parse_mode: 'HTML'
+      });
+      return;
+    }
+
+    const User = await UserRepository.findUser(user.id);
+
+    if (!User) {
+      await ctx.reply("Você não tem registro em meu sistema, envie /start");
+      return;
+    }
+
+
+    const isExpired = User.isSubscriptionExpired();
+
+    if (User.balance == 0 && User.subscription.plan.includes("Free") && isExpired) {
+      let caption = await responseMessages.userNotbalance(user, urlSearch);
+
+      await ctx.reply(caption, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'COMANDOS', callback_data: 'cmds' }],
+            [{ text: 'SUPORTE', url: `${process.env.LINK_SUPORT}` }],
+          ]
+        },
+        parse_mode: 'HTML'
+      });
+      return;
+    }
+
+    await ctx.api.sendChatAction(ctx.update.message.chat.id, "typing");
+
+    let loadingMessage = await ctx.reply('Consultando... ⌛');
+
+    let splitGG = gg.split("|");
+
+    //4891670055815116|04|2027|030
+    let result = await validCc(splitGG[0], splitGG[1], splitGG[2]);
+
+    if (result.result.resultHint.includes("00")) {
+      let caption = await responseMessages.chk(user, gg, result.result);
+   //   console.log(caption)
+      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+
+      await changebalance(User, 0.10);
+
+      await ctx.reply(caption, { parse_mode: "HTML" });
+      console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+
+    } else {
+      let caption = await responseMessages.chkFalse(user, gg, result.result);
+    //  console.log(caption)
+      await ctx.api.deleteMessage(ctx.update.message.chat.id, loadingMessage.message_id);
+
+      await changebalance(User, 0.10);
+
+      await ctx.reply(caption, { parse_mode: "HTML" });
+      console.log(chalk.yellow(`[ COMANDO ${ctx.update.message.text}] => CALL BY ${user.username} SUCCESSE`));
+
+    }
+  } catch (error) {
+    console.log(error);
+    await bot.api.sendMessage(5248583156, `<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>ERRO INESPERADO ACONTECEU COM O @${user.username}</i>\n<i>COMANDO: PWD</i>\n<i>ERROR</i>:\n<code>${error}</code>`, {
       parse_mode: "HTML"
     });
   }

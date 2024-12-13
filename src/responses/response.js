@@ -119,6 +119,50 @@ class responseMessages {
         return caption;
     }
 
+    async chk(userID, gg, result) {
+
+        console.log(result)
+        let user = await UserRepository.findUser(userID.id);
+        if (!user) {
+            user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
+        }
+
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Validação realizada com sucesso! ✅</i>
+
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>CC</i> : <code>${gg}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>RESULTADO</i> : <code>${result.resultDetailing}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>CODE</i> : <code>${result.resultHint}</code>
+
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>SALDO</i> : <i>${user.balance.toFixed(2)}</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+
+`;
+        return caption;
+    }
+
+    async chkFalse(userID, gg, result) {
+
+        console.log(result)
+        let user = await UserRepository.findUser(userID.id);
+        if (!user) {
+            user = await UserRepository.saveUser(userID.first_name, userID.id, userID.username, 0);
+        }
+
+        let caption = `<a href="${process.env.CHANNEL_LINK}">安 </a> » <i>Validação realizada com sucesso! ❌</i>
+
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>CC</i> : <code>${gg}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>RESULTADO</i> : <code>${result.resultMessage}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>CODE</i> : <code>${result.resultCode}</code>
+
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <i>SALDO</i> : <i>${user.balance.toFixed(2)}</i>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Plano</b> : <code> ${user.subscription.plan}</code>
+<a href="${process.env.CHANNEL_LINK}">↳ </a> <b>Status</b> : <code> ${user.subscription.status}</code>
+
+`;
+        return caption;
+    }
+
     async email(userID, total, email) {
         let totalUsers = await countTotalUsers();
         let formatTotal = formatNumber(totalUsers)
